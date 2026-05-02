@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= pageTitle %></title>
+    <meta name="description" content="<%= metaDescription %>" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a href="#top" class="brand-mark" aria-label="Edukid Vision home">
+          <span class="brand-icon">EV</span>
+          <span class="brand-text">Edukid Vision</span>
+        </a>
+
+        <button class="menu-toggle" aria-expanded="false" aria-controls="siteNav">Menu</button>
+
+        <nav id="siteNav" class="site-nav">
+          <a href="#courses">Courses</a>
+          <a href="#about">About</a>
+          <a href="#testimonials">Testimonials</a>
+          <a href="#contact">Contact</a>
+          <a href="#contact" class="btn btn-primary nav-cta">Book a Free Trial</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <%- include('partials/hero') %>
+      <%- include('partials/courses') %>
+      <%- include('partials/about') %>
+      <%- include('partials/testimonials') %>
+      <%- include('partials/contact') %>
+    </main>
+
+    <%- include('partials/footer') %>
+    <div id="toast" class="toast" aria-live="polite"></div>
+    <script src="/js/main.js"></script>
+  </body>
+</html>
