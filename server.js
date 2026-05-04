@@ -13,9 +13,9 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
   res.render('index', {
-    pageTitle: 'Edukid Vision | English, Leadership and IT Courses for Kids and Adults',
+    pageTitle: 'Edukid Vision | Cursuri de Engleza, Leadership si IT pentru copii si adulti',
     metaDescription:
-      'Edukid Vision offers warm, small-group English, Leadership and IT courses for children and adults, with expert teachers and family-friendly support.',
+      'Edukid Vision ofera cursuri de Engleza, Leadership si IT pentru copii si adulti, in grupe mici, cu profesori dedicati si sprijin real pentru familii.',
   });
 });
 

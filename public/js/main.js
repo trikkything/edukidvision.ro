@@ -62,12 +62,12 @@ if (contactForm) {
     const hasEmptyField = [...formData.values()].some((value) => !String(value).trim());
 
     if (hasEmptyField) {
-      showToast('Please complete all fields before sending your inquiry.');
+      showToast('Te rugam sa completezi toate campurile inainte de a trimite solicitarea.');
       return;
     }
 
     contactForm.reset();
-    showToast('Thanks. Your inquiry has been received. We will be in touch soon.');
+    showToast('Multumim. Solicitarea ta a fost primita. Revenim cat mai curand.');
   });
 }
 

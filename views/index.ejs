@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ro">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,25 +16,27 @@
   <body>
     <header class="site-header">
       <div class="container nav-wrap">
-        <a href="#top" class="brand-mark" aria-label="Edukid Vision home">
-          <span class="brand-icon">EV</span>
-          <span class="brand-text">Edukid Vision</span>
+        <a href="#top" class="brand-mark" aria-label="Pagina principala Edukid Vision">
+          <span class="brand-logo">
+            <img src="/images/logo1.jpeg" alt="EduKid Vision" class="brand-logo-image" />
+          </span>
         </a>
 
-        <button class="menu-toggle" aria-expanded="false" aria-controls="siteNav">Menu</button>
+        <button class="menu-toggle" aria-expanded="false" aria-controls="siteNav">Meniu</button>
 
         <nav id="siteNav" class="site-nav">
-          <a href="#courses">Courses</a>
-          <a href="#about">About</a>
-          <a href="#testimonials">Testimonials</a>
+          <a href="#courses">Cursuri</a>
+          <a href="#about">Despre noi</a>
+          <a href="#testimonials">Testimoniale</a>
           <a href="#contact">Contact</a>
-          <a href="#contact" class="btn btn-primary nav-cta">Book a Free Trial</a>
+          <a href="#contact" class="btn btn-primary nav-cta">Programeaza o lectie gratuita</a>
         </nav>
       </div>
     </header>
 
     <main id="top">
       <%- include('partials/hero') %>
+      <%- include('partials/news') %>
       <%- include('partials/courses') %>
       <%- include('partials/about') %>
       <%- include('partials/testimonials') %>
