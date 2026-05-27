@@ -1,68 +1,75 @@
-<section id="contact" class="section section-tint">
-  <div class="container contact-grid">
-    <div class="contact-form-wrap card-soft">
-      <div class="section-heading left-align">
-        <span class="eyebrow">Contact</span>
-        <h2>Spune-ne cate ceva despre cursant.</h2>
-        <p>Te ajutam sa alegi cursul potrivit si sa programezi o lectie gratuita.</p>
-      </div>
+<section id="contact" class="section">
+  <div class="container">
 
-      <form id="contactForm" class="contact-form">
-        <div class="form-row">
-          <label>
-            Nume
-            <input type="text" name="name" placeholder="Numele parintelui sau al cursantului" required />
-          </label>
-          <label>
-            Email
-            <input type="email" name="email" placeholder="you@example.com" required />
-          </label>
-        </div>
-        <div class="form-row">
-          <label>
-            Telefon
-            <input type="tel" name="phone" placeholder="07xx xxx xxx" required />
-          </label>
-          <label>
-            Varsta copilului
-            <input type="text" name="age" placeholder="Varsta sau cursant adult" required />
-          </label>
-        </div>
-        <label>
-          Interes pentru curs
-          <select name="course" required>
-            <option value="">Selecteaza un curs</option>
-            <option>Cursuri de Engleza</option>
-            <option>Cursuri de Leadership</option>
-            <option>Cursuri de IT</option>
-          </select>
-        </label>
-        <label>
-          Mesaj
-          <textarea name="message" rows="5" placeholder="Spune-ne despre obiectivele, programul sau intrebarile tale" required></textarea>
-        </label>
-        <button type="submit" class="btn btn-primary btn-full">Trimite solicitarea</button>
-      </form>
+    <div class="section-header">
+      <div>
+        <span class="label label-teal">Contact</span>
+        <h2>Programează o<br>lecție gratuită.</h2>
+      </div>
     </div>
 
-    <div class="contact-details">
-      <div class="details-card card-soft">
-        <h3>Viziteaza-ne sau contacteaza-ne</h3>
-        <ul class="details-list">
-          <li><strong>Adresa:</strong> 12 Learning Lane, Bucuresti</li>
-          <li><strong>Telefon:</strong> +40 721 000 000</li>
-          <li><strong>Email:</strong> hello@edukidvision.ro</li>
-          <li><strong>Program:</strong> Luni-Vineri 10:00-19:00, Sambata 10:00-14:00</li>
-        </ul>
+    <div class="contact-grid">
+      <div class="contact-form-wrap">
+        <p style="margin-bottom:1.75rem">Spune-ne câte ceva despre cursant și te ajutăm să alegi cursul potrivit.</p>
+
+        <form id="contactForm" class="contact-form">
+          <div class="form-row">
+            <label>
+              Nume
+              <input type="text" name="name" placeholder="Numele părintelui sau al cursantului" required />
+            </label>
+            <label>
+              Email
+              <input type="email" name="email" placeholder="you@example.com" required />
+            </label>
+          </div>
+          <div class="form-row">
+            <label>
+              Telefon
+              <input type="tel" name="phone" placeholder="07xx xxx xxx" required />
+            </label>
+            <label>
+              Vârsta
+              <input type="text" name="age" placeholder="Vârsta copilului sau adult" required />
+            </label>
+          </div>
+          <label>
+            Interes pentru curs
+            <select name="course" required>
+              <option value="">Selectează un curs</option>
+              <option>Cursuri de Engleză</option>
+              <option>Cursuri de Leadership</option>
+              <option>Cursuri de IT</option>
+            </select>
+          </label>
+          <label>
+            Mesaj
+            <textarea name="message" rows="4" placeholder="Obiective, program sau întrebări" required></textarea>
+          </label>
+          <button type="submit" class="btn btn-primary btn-full">Trimite solicitarea</button>
+        </form>
       </div>
-      <div class="map-card card-soft">
-        <h3>Locatie</h3>
-        <div class="map-placeholder">Harta aici</div>
-      </div>
-      <div class="cta-banner">
-        <h3>Esti gata sa incepi? Programeaza o lectie gratuita.</h3>
-        <a href="#contact" class="btn btn-primary">Programeaza o lectie gratuita</a>
+
+      <div class="contact-details">
+        <div>
+          <p class="details-label">Vizitează-ne</p>
+          <ul class="details-list">
+            <li><strong>Adresă</strong> 12 Learning Lane, București</li>
+            <li><strong>Telefon</strong> +40 721 000 000</li>
+            <li><strong>Email</strong> hello@edukidvision.ro</li>
+            <li><strong>Program</strong> Luni–Vineri 10:00–19:00 · Sâmbătă 10:00–14:00</li>
+          </ul>
+        </div>
+        <div>
+          <p class="details-label">Locație</p>
+          <div class="map-placeholder">Hartă aici</div>
+        </div>
+        <div class="cta-inline">
+          <h3>Ești gata să începi?</h3>
+          <a href="#contact" class="btn btn-primary">Programează o lecție gratuită</a>
+        </div>
       </div>
     </div>
+
   </div>
 </section>
