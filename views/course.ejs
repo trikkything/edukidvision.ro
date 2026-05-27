@@ -13,220 +13,17 @@
     />
     <link rel="stylesheet" href="/css/styles.css" />
     <style>
-      /* Per-course accent injected via CSS custom property */
+      /* Per-course accent — injected here because values come from EJS data */
       :root {
         --course-accent:        <%= course.accentColor %>;
         --course-accent-dim:    <%= course.accentDim %>;
         --course-accent-border: <%= course.accentBorder %>;
       }
-      .course-accent        { color: var(--course-accent); }
-      .course-accent-bg     { background: var(--course-accent-dim); }
-      .course-accent-border { border-color: var(--course-accent-border); }
-
-      /* Back link */
-      .back-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-family: var(--ff-display);
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: var(--ink-faint);
-        transition: color 0.15s;
-        margin-bottom: 2.5rem;
-      }
-      .back-link:hover { color: var(--course-accent); }
-
-      /* Course hero */
-      .course-hero {
-        padding: 3.5rem 0 0;
-        border-bottom: 1px solid var(--border);
-      }
-      .course-hero-inner {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 4rem;
-        align-items: end;
-        padding-bottom: 3.5rem;
-        border-bottom: 1px solid var(--border);
-      }
-      .course-hero h1 { font-size: clamp(2.8rem, 7vw, 5.5rem); }
-      .course-hero-right { padding-bottom: 0.5rem; }
-      .course-hero-right p { font-size: 1.05rem; max-width: 42ch; margin-bottom: 2rem; }
-
-      /* Tag */
-      .course-hero-tag {
-        display: inline-block;
-        font-family: var(--ff-display);
-        font-size: 0.68rem;
-        font-weight: 700;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        padding: 0.3rem 0.8rem;
-        border: 1px solid var(--course-accent-border);
-        background: var(--course-accent-dim);
-        color: var(--ink);
-        margin-bottom: 1.5rem;
-      }
-
-      /* Details strip */
-      .details-strip {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        border-top: 1px solid var(--border);
-      }
-      .detail-cell {
-        padding: 1.75rem 1.5rem;
-        border-right: 1px solid var(--border);
-      }
-      .detail-cell:first-child { padding-left: 0; }
-      .detail-cell:last-child  { border-right: none; }
-      .detail-cell:nth-child(4) { padding-left: 0; border-top: 1px solid var(--border); }
-      .detail-cell:nth-child(n+4) { border-top: 1px solid var(--border); }
-      .detail-label {
-        font-family: var(--ff-display);
-        font-size: 0.68rem;
-        font-weight: 700;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: var(--ink-faint);
-        margin-bottom: 0.35rem;
-      }
-      .detail-value {
-        font-size: 0.95rem;
-        font-weight: 600;
-        color: var(--ink);
-      }
-
-      /* For whom grid */
-      .whom-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        border-top: 1px solid var(--border);
-      }
-      .whom-cell {
-        padding: 2rem 2rem 2rem 0;
-        border-right: 1px solid var(--border);
-        border-bottom: 1px solid var(--border);
-      }
-      .whom-cell:nth-child(2n)  { padding-left: 2rem; padding-right: 0; border-right: none; }
-      .whom-cell:nth-child(n+3) { }
-      .whom-cell:nth-child(3),
-      .whom-cell:nth-child(4)   { border-bottom: none; }
-      .whom-group {
-        font-family: var(--ff-display);
-        font-size: 1rem;
-        font-weight: 700;
-        letter-spacing: -0.01em;
-        margin-bottom: 0.5rem;
-        color: var(--course-accent);
-      }
-      .whom-desc { font-size: 0.9rem; color: var(--ink-muted); line-height: 1.65; }
-
-      /* Curriculum rows */
-      .curriculum-row {
-        display: grid;
-        grid-template-columns: 3rem 1fr;
-        gap: 1.5rem;
-        align-items: start;
-        padding: 1.75rem 0;
-        border-bottom: 1px solid var(--border);
-      }
-      .curriculum-row:last-child { border-bottom: none; }
-      .curriculum-num {
-        font-family: var(--ff-display);
-        font-size: 0.7rem;
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        color: var(--ink-faint);
-        padding-top: 0.2rem;
-      }
-      .curriculum-title {
-        font-family: var(--ff-display);
-        font-size: 1.05rem;
-        font-weight: 700;
-        letter-spacing: -0.01em;
-        margin-bottom: 0.35rem;
-      }
-      .curriculum-desc { font-size: 0.9rem; color: var(--ink-muted); line-height: 1.65; }
-
-      /* Testimonials on course page */
-      .course-testi-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        border-top: 1px solid var(--border);
-      }
-      .course-testi-cell {
-        padding: 2rem 2rem 2rem 0;
-        border-right: 1px solid var(--border);
-      }
-      .course-testi-cell:last-child { border-right: none; padding-right: 0; padding-left: 2rem; }
-      .course-testi-cell:nth-child(2) { padding-left: 2rem; }
-
-      /* CTA band */
-      .course-cta {
-        padding: 4rem 0;
-        border-top: 1px solid var(--border);
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 3rem;
-        align-items: center;
-      }
-      .course-cta h2 { font-size: clamp(1.8rem, 4vw, 3rem); }
-      .course-cta-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
-
-      /* Responsive */
-      @media (max-width: 960px) {
-        .course-hero-inner  { grid-template-columns: 1fr; gap: 1.5rem; }
-        .details-strip      { grid-template-columns: 1fr 1fr; }
-        .detail-cell:nth-child(2) { border-right: none; }
-        .detail-cell:nth-child(n+3) { border-top: 1px solid var(--border); }
-        .detail-cell:nth-child(3)   { padding-left: 0; }
-        .whom-grid          { grid-template-columns: 1fr; }
-        .whom-cell          { padding: 1.5rem 0 !important; border-right: none !important; border-bottom: 1px solid var(--border); }
-        .whom-cell:last-child { border-bottom: none; }
-        .course-testi-grid  { grid-template-columns: 1fr; }
-        .course-testi-cell  { padding: 1.75rem 0 !important; border-right: none; border-bottom: 1px solid var(--border); }
-        .course-testi-cell:last-child { border-bottom: none; }
-        .course-cta         { grid-template-columns: 1fr; gap: 1.5rem; }
-      }
-      @media (max-width: 768px) {
-        .details-strip { grid-template-columns: 1fr; }
-        .detail-cell   { border-right: none; border-top: 1px solid var(--border); padding-left: 0; }
-        .detail-cell:first-child { border-top: none; }
-        .whom-grid     { grid-template-columns: 1fr; }
-      }
     </style>
   </head>
   <body>
 
-    <!-- ── Header (same as homepage) ── -->
-    <header class="site-header">
-      <div class="container nav-wrap">
-        <a href="/" class="brand-mark" aria-label="EduKid Vision — pagina principală">
-          <img src="/images/logo-mark-400.png" alt="" class="brand-icon" aria-hidden="true" />
-          <div class="brand-wordmark">
-            <span class="brand-name">
-              <span class="brand-name-edu">EduKid</span>
-              <span class="brand-name-vis"> Vision</span>
-            </span>
-            <span class="brand-tagline">Education · Inspiration · Leadership</span>
-          </div>
-        </a>
-
-        <button class="menu-toggle" aria-expanded="false" aria-controls="siteNav">Meniu</button>
-
-        <nav id="siteNav" class="site-nav">
-          <a href="/#courses">Cursuri</a>
-          <a href="/#about">Despre noi</a>
-          <a href="/#testimonials">Testimoniale</a>
-          <a href="/#contact">Contact</a>
-          <a href="/#contact" class="btn btn-primary nav-cta">Lecție gratuită</a>
-        </nav>
-      </div>
-    </header>
+    <%- include('partials/header') %>
 
     <main>
 
@@ -282,7 +79,7 @@
       </section>
 
       <!-- ── Curriculum ── -->
-      <section class="section" style="padding-top:0">
+      <section class="section section--no-top">
         <div class="container">
           <div class="section-header">
             <div>
@@ -305,11 +102,11 @@
       </section>
 
       <!-- ── Testimonials ── -->
-      <section class="section" style="padding-top:0">
+      <section class="section section--no-top">
         <div class="container">
           <div class="section-header">
             <div>
-              <span class="label" style="color:var(--orange)">Testimoniale</span>
+              <span class="label label-orange">Testimoniale</span>
               <h2>Ce spun cursanții.</h2>
             </div>
           </div>
@@ -343,46 +140,7 @@
 
     </main>
 
-    <!-- ── Footer ── -->
-    <footer class="site-footer">
-      <div class="container">
-        <div class="footer-main">
-          <div class="footer-brand">
-            <div class="footer-logo-wrap">
-              <img src="/images/logo-mark-400.png" alt="EduKid Vision" class="footer-icon" />
-              <div class="footer-wordmark">
-                <span class="footer-brand-name">
-                  <span style="color:var(--green)">EduKid</span>
-                  <span style="color:var(--teal)"> Vision</span>
-                </span>
-                <span class="footer-brand-tagline">Education · Inspiration · Leadership</span>
-              </div>
-            </div>
-            <p class="footer-desc">Învățare caldă și practică pentru copii curioși,<br>adulți încrezători și familii implicate.</p>
-          </div>
-          <div class="footer-col">
-            <p class="footer-col-label">Cursuri</p>
-            <ul class="footer-links">
-              <li><a href="/cursuri/engleza">Engleză</a></li>
-              <li><a href="/cursuri/leadership">Leadership</a></li>
-              <li><a href="/cursuri/it">IT</a></li>
-            </ul>
-          </div>
-          <div class="footer-col">
-            <p class="footer-col-label">Urmărește-ne</p>
-            <ul class="footer-links">
-              <li><a href="#">Facebook</a></li>
-              <li><a href="#">Instagram</a></li>
-              <li><a href="#">LinkedIn</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <p>© 2026 Edukid Vision. Toate drepturile rezervate.</p>
-          <a href="mailto:hello@edukidvision.ro">hello@edukidvision.ro</a>
-        </div>
-      </div>
-    </footer>
+    <%- include('partials/footer') %>
 
     <div id="toast" class="toast" aria-live="polite"></div>
     <script src="/js/main.js"></script>

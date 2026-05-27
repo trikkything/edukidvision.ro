@@ -15,34 +15,7 @@
   </head>
   <body>
 
-    <header class="site-header">
-      <div class="container nav-wrap">
-
-        <!-- Full horizontal logo: icon mark + wordmark + tagline -->
-        <a href="#top" class="brand-mark" aria-label="EduKid Vision — pagina principala">
-          <img src="/images/logo-mark-400.png" alt="" class="brand-icon" aria-hidden="true" />
-          <div class="brand-wordmark">
-            <span class="brand-name">
-              <span class="brand-name-edu">EduKid</span>
-              <span style="color:#ccc"> </span>
-              <span class="brand-name-vis">Vision</span>
-            </span>
-            <span class="brand-tagline">Education · Inspiration · Leadership</span>
-          </div>
-        </a>
-
-        <button class="menu-toggle" aria-expanded="false" aria-controls="siteNav">Meniu</button>
-
-        <nav id="siteNav" class="site-nav">
-          <a href="#courses">Cursuri</a>
-          <a href="#about">Despre noi</a>
-          <a href="#testimonials">Testimoniale</a>
-          <a href="#contact">Contact</a>
-          <a href="#contact" class="btn btn-primary nav-cta">Lecție gratuită</a>
-        </nav>
-
-      </div>
-    </header>
+    <%- include('partials/header') %>
 
     <main id="top">
       <%- include('partials/hero') %>

@@ -17,6 +17,14 @@ if (menuToggle && siteNav) {
       menuToggle.setAttribute('aria-expanded', 'false');
     });
   });
+
+  // Close nav when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!siteNav.contains(e.target) && !menuToggle.contains(e.target)) {
+      siteNav.classList.remove('is-open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+    }
+  });
 }
 
 const updateCourses = (audience) => {
@@ -58,16 +66,39 @@ const showToast = (message) => {
 if (contactForm) {
   contactForm.addEventListener('submit', (event) => {
     event.preventDefault();
+
     const formData = new FormData(contactForm);
     const hasEmptyField = [...formData.values()].some((value) => !String(value).trim());
-
     if (hasEmptyField) {
-      showToast('Te rugam sa completezi toate campurile inainte de a trimite solicitarea.');
+      showToast('Te rugăm să completezi toate câmpurile înainte de a trimite solicitarea.');
       return;
     }
 
-    contactForm.reset();
-    showToast('Multumim. Solicitarea ta a fost primita. Revenim cat mai curand.');
+    const submitBtn = contactForm.querySelector('[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Se trimite…';
+    submitBtn.disabled = true;
+
+    fetch('/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.fromEntries(formData)),
+    })
+      .then((res) => {
+        if (res.ok) {
+          contactForm.reset();
+          showToast('Mulțumim! Te vom contacta în curând.');
+        } else {
+          showToast('Ceva nu a mers. Încearcă din nou sau scrie-ne direct.');
+        }
+      })
+      .catch(() => {
+        showToast('Eroare de rețea. Verifică conexiunea și încearcă din nou.');
+      })
+      .finally(() => {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      });
   });
 }
 

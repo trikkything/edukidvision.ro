@@ -1,8 +1,19 @@
-const express = require('express');
-const path = require('path');
+require('dotenv').config();
+const express    = require('express');
+const path       = require('path');
+const nodemailer = require('nodemailer');
 
-const app = express();
+const app  = express();
 const port = process.env.PORT || 3002;
+
+/* ─── Gmail transporter ───────────────────────────────────────────────── */
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD,
+  },
+});
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -151,6 +162,43 @@ app.get('/cursuri/:slug', (req, res) => {
     metaDescription: course.metaDescription,
     course,
   });
+});
+
+/* ─── Contact form POST ───────────────────────────────────────────────── */
+app.post('/contact', async (req, res) => {
+  const { name, email, phone, age, course, message } = req.body;
+
+  // Basic server-side validation
+  if (!name || !email || !phone || !age || !course || !message) {
+    return res.status(400).json({ error: 'Toate câmpurile sunt obligatorii.' });
+  }
+
+  const mailOptions = {
+    from: `"EduKid Vision" <${process.env.GMAIL_USER}>`,
+    to: process.env.CONTACT_RECIPIENT,
+    replyTo: email,
+    subject: `Solicitare nouă: ${course} — ${name}`,
+    html: `
+      <h2 style="font-family:sans-serif;color:#009B9E">Solicitare nouă de la ${name}</h2>
+      <table style="font-family:sans-serif;font-size:14px;border-collapse:collapse;width:100%">
+        <tr><td style="padding:8px 12px;border:1px solid #e5e5e5"><strong>Nume</strong></td><td style="padding:8px 12px;border:1px solid #e5e5e5">${name}</td></tr>
+        <tr><td style="padding:8px 12px;border:1px solid #e5e5e5"><strong>Email</strong></td><td style="padding:8px 12px;border:1px solid #e5e5e5"><a href="mailto:${email}">${email}</a></td></tr>
+        <tr><td style="padding:8px 12px;border:1px solid #e5e5e5"><strong>Telefon</strong></td><td style="padding:8px 12px;border:1px solid #e5e5e5">${phone}</td></tr>
+        <tr><td style="padding:8px 12px;border:1px solid #e5e5e5"><strong>Vârstă</strong></td><td style="padding:8px 12px;border:1px solid #e5e5e5">${age}</td></tr>
+        <tr><td style="padding:8px 12px;border:1px solid #e5e5e5"><strong>Curs</strong></td><td style="padding:8px 12px;border:1px solid #e5e5e5">${course}</td></tr>
+        <tr><td style="padding:8px 12px;border:1px solid #e5e5e5"><strong>Mesaj</strong></td><td style="padding:8px 12px;border:1px solid #e5e5e5">${message}</td></tr>
+      </table>
+      <p style="font-family:sans-serif;font-size:12px;color:#999;margin-top:24px">Trimis de pe edukidvision.ro</p>
+    `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ ok: true });
+  } catch (err) {
+    console.error('Mail error:', err);
+    res.status(500).json({ error: 'Eroare la trimiterea emailului.' });
+  }
 });
 
 /* ─── Server ──────────────────────────────────────────────────────────── */
