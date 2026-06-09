@@ -198,6 +198,104 @@ p { color: var(--ink-muted); line-height: 1.7; }
 
 .site-nav a:not(.btn):hover { color: var(--teal); }
 
+/* Nav dropdown */
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--ff-display);
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+  padding: 0;
+  transition: color 0.15s;
+}
+.nav-dropdown-trigger:hover,
+.nav-dropdown.is-open .nav-dropdown-trigger { color: var(--teal); }
+
+.nav-dropdown-chevron {
+  transition: transform 0.2s;
+}
+.nav-dropdown.is-open .nav-dropdown-chevron { transform: rotate(180deg); }
+
+.nav-dropdown-panel {
+  display: none;
+  position: absolute;
+  top: calc(100% + 1.25rem);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 480px;
+  background: #fff;
+  border: 1px solid var(--border);
+  z-index: 100;
+}
+.nav-dropdown.is-open .nav-dropdown-panel { display: block; }
+
+.nav-dropdown-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.nav-dropdown-col { padding: 0; }
+.nav-dropdown-col--right { border-left: 1px solid var(--border); }
+
+.nav-dropdown-col-label {
+  font-family: var(--ff-display);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.65rem 1rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+  display: block;
+  margin: 0;
+}
+
+.nav-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+  text-decoration: none;
+  transition: background 0.12s;
+}
+.nav-dropdown-item:last-child { border-bottom: none; }
+.nav-dropdown-item:hover { background: #fafafa; }
+
+.nav-dropdown-dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.nav-dropdown-item strong {
+  display: block;
+  font-family: var(--ff-display);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 0.1rem;
+}
+
+.nav-dropdown-sub {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+  line-height: 1.4;
+}
+
 /* Nav social icons */
 .nav-social {
   display: flex;
@@ -359,34 +457,6 @@ p { color: var(--ink-muted); line-height: 1.7; }
   color: var(--teal);
 }
 
-/* Audience toggle — underline style, no background pill */
-.toggle {
-  display: flex;
-  gap: 0;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 0;
-}
-
-.toggle-btn {
-  border: none;
-  background: transparent;
-  padding: 0.9rem 0;
-  margin-right: 2rem;
-  font-family: var(--ff-display);
-  font-size: 0.88rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: var(--ink-faint);
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-  transition: color 0.15s, border-color 0.15s;
-}
-
-.toggle-btn.is-active {
-  color: var(--teal);
-  border-bottom-color: var(--teal);
-}
 
 /* Course row — works as <div> or <a> */
 a.course-row { text-decoration: none; color: inherit; }
@@ -446,6 +516,48 @@ a.course-row { text-decoration: none; color: inherit; }
   transition: color 0.15s, transform 0.15s;
 }
 .course-row:hover .course-arrow { color: var(--teal); transform: translateX(4px); }
+
+/* Course bands (varianta 3 — copii + adulți stacked) */
+.courses-band { border-top: 1px solid var(--border); }
+
+.courses-band-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 0;
+  border-bottom: 2px solid;
+}
+
+.courses-band-header--kids {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.courses-band-header--adults {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+.courses-band-icon {
+  flex-shrink: 0;
+}
+
+.courses-band-label {
+  font-family: var(--ff-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  flex: 1;
+}
+
+.courses-band-age {
+  font-family: var(--ff-display);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
 
 /* ─── ABOUT ───────────────────────────────────────────────────────────── */
 .about-grid {
@@ -882,6 +994,30 @@ textarea { resize: vertical; min-height: 100px; }
     gap: 1.25rem;
   }
 
+  /* Dropdown goes inline on mobile */
+  .nav-dropdown { width: 100%; }
+
+  .nav-dropdown-trigger {
+    width: 100%;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.88rem;
+  }
+
+  .nav-dropdown-panel {
+    position: static;
+    transform: none;
+    min-width: 0;
+    border: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-dropdown-cols { grid-template-columns: 1fr; }
+  .nav-dropdown-col--right { border-left: none; border-top: 1px solid var(--border); }
+
+  .nav-dropdown-item { padding: 0.7rem 1rem; }
+
   .brand-tagline { display: none; }
 
   .hero { padding: 2rem 0 0; }
@@ -907,6 +1043,43 @@ textarea { resize: vertical; min-height: 100px; }
 .section--no-top { padding-top: 0; }
 
 /* ─── Course page ─────────────────────────────────────────────────────── */
+
+/* Audience switcher — shown at top of course hero */
+.audience-switcher {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.audience-switcher-tabs {
+  display: flex;
+  border: 1px solid var(--border);
+}
+
+.audience-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1rem;
+  font-family: var(--ff-display);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  border-right: 1px solid var(--border);
+  transition: color 0.15s, background 0.15s;
+}
+
+.audience-tab:last-child { border-right: none; }
+.audience-tab:hover { color: var(--ink); background: #fafafa; }
+.audience-tab.is-active {
+  color: #fff;
+  background: var(--course-accent);
+}
 
 /* Back link */
 .back-link {

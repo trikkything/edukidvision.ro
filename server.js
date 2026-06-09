@@ -1,7 +1,9 @@
 require('dotenv').config();
 const express    = require('express');
 const path       = require('path');
+const fs         = require('fs');
 const nodemailer = require('nodemailer');
+const session    = require('express-session');
 
 const app  = express();
 const port = process.env.PORT || 3002;
@@ -21,147 +23,366 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'edukid-secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 8 * 60 * 60 * 1000 }, // 8 hours
+}));
 
-/* ─── Course data ─────────────────────────────────────────────────────── */
-const courses = {
+/* ─── Course data helpers ─────────────────────────────────────────────── */
+const COURSES_FILE = path.join(__dirname, 'data', 'courses.json');
+
+function loadCourses() {
+  return JSON.parse(fs.readFileSync(COURSES_FILE, 'utf8'));
+}
+
+function saveCourses(list) {
+  fs.writeFileSync(COURSES_FILE, JSON.stringify(list, null, 2));
+}
+
+/* ─── Admin auth middleware ───────────────────────────────────────────── */
+function requireAdmin(req, res, next) {
+  if (req.session && req.session.admin) return next();
+  res.redirect('/admin/login');
+}
+
+/* ─── Inject active courses into every view ───────────────────────────── */
+app.use((req, res, next) => {
+  // Skip for admin routes — they don't use the public header partial
+  if (req.path.startsWith('/admin')) return next();
+  res.locals.activeCourses = loadCourses().filter(c => c.active);
+  next();
+});
+
+/* ─── Routes ──────────────────────────────────────────────────────────── */
+
+/*
+ * LEGACY HARDCODED DATA REMOVED — courses now live in data/courses.json
+ * and are loaded dynamically via loadCourses() on each request.
+ */
+
+const _courses_placeholder = {
   engleza: {
     slug: 'engleza',
-    title: 'Cursuri de Engleză',
-    subtitle: 'Conversație, fluență și examene — la orice vârstă.',
+    tagLabel: 'Engleză',
     accentColor: '#FEAF4A',
     accentDim: 'rgba(254,175,74,0.10)',
     accentBorder: 'rgba(254,175,74,0.45)',
-    tagLabel: 'Engleză',
-    pageTitle: 'Cursuri de Engleză | EduKid Vision',
-    metaDescription: 'Cursuri de engleză pentru copii și adulți în grupe mici. Conversație, vocabular, pregătire examene Cambridge, IELTS și TOEFL.',
-    intro: 'Cursurile noastre de engleză sunt construite în jurul unui singur principiu: fiecare cursant trebuie să simtă că poate comunica cu încredere, nu doar să cunoască reguli. Predăm în grupe mici, cu metode interactive, și adaptăm ritmul la fiecare nivel.',
-    forWhom: [
-      { group: 'Copii 6–10 ani', desc: 'Introducere în limbă prin joc, cântece și povești. Accent pe pronunție, vocabular de bază și dragoste pentru limbă.' },
-      { group: 'Copii 11–14 ani', desc: 'Gramatică solidă, conversație structurată și pregătire pentru examene Cambridge Young Learners.' },
-      { group: 'Adolescenți 15–17 ani', desc: 'Engleză academică și de business, pregătire Cambridge B1/B2, prezentări și debate.' },
-      { group: 'Adulți 18+', desc: 'Comunicare profesională, IELTS / TOEFL, engleză pentru călătorii, conversație fluentă.' },
-    ],
-    curriculum: [
-      { num: '01', title: 'Vocabular & Pronunție', desc: 'Construirea unui vocabular activ prin tehnici de memorare și exerciții de pronunție ghidată.' },
-      { num: '02', title: 'Gramatică Aplicată', desc: 'Reguli explicate în context real — nu din manual izolat. Exersăm imediat ceea ce înțelegem.' },
-      { num: '03', title: 'Conversație', desc: 'Simulări de situații reale: interviuri, călătorii, prezentări, discuții de opinie.' },
-      { num: '04', title: 'Citire & Scriere', desc: 'Texte autentice, eseuri structurate și tehnici de skimming/scanning pentru examene.' },
-      { num: '05', title: 'Pregătire Examene', desc: 'Sesiuni dedicate Cambridge (A2–C1), IELTS, TOEFL și bacalaureat. Simulări cu feedback.' },
-      { num: '06', title: 'Proiecte & Prezentări', desc: 'Fiecare modul se încheie cu un proiect real — prezentare, dezbatere sau eseu evaluat.' },
-    ],
-    details: [
-      { label: 'Durată lecție', value: '60 min (copii) · 90 min (adulți)' },
-      { label: 'Frecvență', value: '2 lecții / săptămână' },
-      { label: 'Mărime grupă', value: 'Maxim 6 cursanți' },
-      { label: 'Nivel de start', value: 'Beginner → Advanced' },
-      { label: 'Materiale', value: 'Incluse în taxă' },
-      { label: 'Raport progres', value: 'Lunar pentru părinți' },
-    ],
-    testimonials: [
-      { quote: 'Fiica mea a trecut Cambridge A2 Key din prima. Profesoara a știut exact cum să o motiveze.', author: 'Mihaela D., mama Anei, 11 ani' },
-      { quote: 'Am luat 7.5 la IELTS după 6 luni de curs. Recomand oricui vrea rezultate reale.', author: 'Radu M., adult' },
-      { quote: 'Fiul meu refuza să vorbească engleză la școală. Acum vrea să vadă filme fără subtitrare.', author: 'Adriana P., mama lui Luca, 9 ani' },
-    ],
+    copii: {
+      title: 'Engleză pentru Copii',
+      pageTitle: 'Engleză pentru Copii | EduKid Vision',
+      metaDescription: 'Cursuri de engleză pentru copii 6–17 ani. Vocabular, conversație, pronunție și pregătire examene Cambridge în grupe mici.',
+      intro: 'Când copiii se simt în siguranță și se distrează, limbile vin natural. Cursurile noastre de engleză pentru copii sunt construite în jurul jocului, poveștilor și proiectelor creative — nu al manualului. Adaptăm fiecare lecție la vârstă și la ritmul fiecăruia.',
+      forWhom: [
+        { group: 'Copii 6–10 ani', desc: 'Primele cuvinte, pronunție corectă și dragoste pentru limbă. Învățăm prin cântece, jocuri și povești ilustrate.' },
+        { group: 'Copii 11–14 ani', desc: 'Gramatică solidă, conversație structurată și pregătire pentru Cambridge Young Learners (A1–B1).' },
+        { group: 'Adolescenți 15–17 ani', desc: 'Engleză academică, pregătire Cambridge B1/B2, prezentări, debate și scriere avansată.' },
+        { group: 'Pregătire examene', desc: 'Sesiuni dedicate Cambridge KET, PET, FCE și bacalaureat cu simulări și feedback detaliat.' },
+      ],
+      curriculum: [
+        { num: '01', title: 'Vocabular & Pronunție', desc: 'Construirea unui vocabular activ prin tehnici vizuale, mnemonice și exerciții de pronunție ghidată.' },
+        { num: '02', title: 'Gramatică prin Povești', desc: 'Regulile gramaticale sunt introduse în contexte narative reale — copilul înțelege înainte să memoreze.' },
+        { num: '03', title: 'Conversație & Joc de Rol', desc: 'Situații simulate din viața reală: la magazin, la școală, în vacanță. Comunicare fără frică de greșeli.' },
+        { num: '04', title: 'Citire & Scriere Creativă', desc: 'Texte adaptate vârstei, mini-eseuri, scrisori și proiecte de scriere cu feedback constructiv.' },
+        { num: '05', title: 'Pregătire Examene Cambridge', desc: 'Exerciții tip examen, tehnici de gestionare a timpului și simulări complete cu corectare.' },
+        { num: '06', title: 'Proiect Final de Modul', desc: 'Fiecare modul se încheie cu o prezentare sau un proiect în fața grupei și a părinților.' },
+      ],
+      details: [
+        { label: 'Durată lecție', value: '60 minute' },
+        { label: 'Frecvență', value: '2 lecții / săptămână' },
+        { label: 'Mărime grupă', value: 'Maxim 6 copii' },
+        { label: 'Vârste', value: '6–17 ani' },
+        { label: 'Materiale', value: 'Incluse în taxă' },
+        { label: 'Raport progres', value: 'Lunar pentru părinți' },
+      ],
+      testimonials: [
+        { quote: 'Fiica mea a trecut Cambridge A2 Key din prima. Profesoara a știut exact cum să o motiveze.', author: 'Mihaela D., mama Anei, 11 ani' },
+        { quote: 'Fiul meu refuza să vorbească engleză la școală. Acum vrea să vadă filme fără subtitrare.', author: 'Adriana P., mama lui Luca, 9 ani' },
+        { quote: 'Cel mai bun curs pentru copii. Atmosfera e caldă, iar progresul se vede rapid.', author: 'Ionela V., mama Biancăi, 13 ani' },
+      ],
+    },
+    adulti: {
+      title: 'Engleză pentru Adulți',
+      pageTitle: 'Engleză pentru Adulți | EduKid Vision',
+      metaDescription: 'Cursuri de engleză pentru adulți 18+. Business English, IELTS, TOEFL, conversație și gramatică aplicată în grupe mici.',
+      intro: 'Cursurile noastre pentru adulți pornesc de la un singur obiectiv: să vorbești cu încredere, nu doar să știi reguli. Fie că te pregătești pentru IELTS, vrei să avansezi la job sau pur și simplu vrei să călătorești fără dicționar — avem un program construit pentru tine.',
+      forWhom: [
+        { group: 'Începători & Reluare', desc: 'Ai studiat engleză dar ai uitat? Sau nu ai studiat deloc? Redescoperirii limbii într-un spațiu fără presiune.' },
+        { group: 'Nivel Mediu & Avansat', desc: 'Rafinarea gramaticii, extinderea vocabularului și fluidizarea conversației pentru uz zilnic și profesional.' },
+        { group: 'Business English', desc: 'Comunicare la locul de muncă, emailuri profesionale, prezentări și negociere în limba engleză.' },
+        { group: 'Pregătire IELTS / TOEFL', desc: 'Pregătire intensivă cu exerciții tip examen, tehnici specifice și simulări complete.' },
+      ],
+      curriculum: [
+        { num: '01', title: 'Gramatică în Context Real', desc: 'Regulile explicate prin situații autentice de viață și muncă — fără teoria izolată din manual.' },
+        { num: '02', title: 'Comunicare Profesională', desc: 'Emailuri, rapoarte, prezentări și conversații de business. Engleză care funcționează la birou.' },
+        { num: '03', title: 'Conversație & Fluență', desc: 'Sesiuni de conversație liberă pe teme actuale, dezbateri și simulări de interviuri.' },
+        { num: '04', title: 'Scriere Avansată', desc: 'Eseuri argumentative, rapoarte formale și tehnici de scriere academică pentru examene.' },
+        { num: '05', title: 'Pregătire IELTS & TOEFL', desc: 'Exerciții complete pentru cele 4 module (Reading, Writing, Listening, Speaking) cu feedback detaliat.' },
+        { num: '06', title: 'Proiecte Aplicate', desc: 'Prezentări pe teme profesionale, simulări de interviuri și proiecte de comunicare reală.' },
+      ],
+      details: [
+        { label: 'Durată lecție', value: '90 minute' },
+        { label: 'Frecvență', value: '2 lecții / săptămână' },
+        { label: 'Mărime grupă', value: 'Maxim 6 cursanți' },
+        { label: 'Nivel de start', value: 'Beginner → Advanced' },
+        { label: 'Materiale', value: 'Incluse în taxă' },
+        { label: 'Format', value: 'Fizic sau online' },
+      ],
+      testimonials: [
+        { quote: 'Am luat 7.5 la IELTS după 6 luni de curs. Recomand oricui vrea rezultate reale.', author: 'Radu M., 32 ani' },
+        { quote: 'Mi-am schimbat jobul datorită acestui curs. Business English-ul predat aici e concret și aplicabil imediat.', author: 'Cristina L., project manager' },
+        { quote: 'Am pornit de la zero și acum țin prezentări în engleză fără să mă blochez. Incredibil.', author: 'Sorin P., antreprenor' },
+      ],
+    },
   },
 
   leadership: {
     slug: 'leadership',
-    title: 'Cursuri de Leadership',
-    subtitle: 'Voce, prezență și curaj — în fiecare etapă a vieții.',
+    tagLabel: 'Leadership',
     accentColor: '#FE7875',
     accentDim: 'rgba(254,120,117,0.10)',
     accentBorder: 'rgba(254,120,117,0.45)',
-    tagLabel: 'Leadership',
-    pageTitle: 'Cursuri de Leadership | EduKid Vision',
-    metaDescription: 'Cursuri de leadership pentru copii și adulți: vorbire în public, lucru în echipă, comunicare și încredere în sine.',
-    intro: 'Leadership-ul nu se predă din teorie — se exersează. Cursurile noastre sunt spații sigure unde copiii și adulții descoperă că au o voce, că ideile lor contează și că pot conduce prin exemplu. Fiecare lecție combină exerciții practice, jocuri de rol și proiecte reale.',
-    forWhom: [
-      { group: 'Copii 8–11 ani', desc: 'Jocuri de cooperare, proiecte de grup, vorbire în fața colegilor. Construim curaj pas cu pas.' },
-      { group: 'Adolescenți 12–17 ani', desc: 'Dezbateri, prezentări TED-style, proiecte de impact social. Descoperă-ți vocea autentică.' },
-      { group: 'Adulți 18+', desc: 'Prezentări profesionale, comunicare în echipă, negociere și influență cu integritate.' },
-      { group: 'Grupuri corporate', desc: 'Workshop-uri personalizate pentru echipe: facilitare, delegare, feedback constructiv.' },
-    ],
-    curriculum: [
-      { num: '01', title: 'Comunicare & Ascultare', desc: 'Tehnici de ascultare activă, claritate în mesaj și adaptarea la public.' },
-      { num: '02', title: 'Vorbire în Public', desc: 'Structura unui discurs, controlul anxietății, contactul vizual și limbajul corpului.' },
-      { num: '03', title: 'Lucru în Echipă', desc: 'Roluri în grup, rezolvarea conflictelor, luarea deciziilor colective și responsabilitate.' },
-      { num: '04', title: 'Gândire Critică', desc: 'Analiză de situații, argumentare logică, identificarea bias-urilor și soluții creative.' },
-      { num: '05', title: 'Proiecte de Impact', desc: 'Fiecare sesiune culminează cu un proiect real prezentat colegilor și părinților.' },
-      { num: '06', title: 'Feedback & Reflecție', desc: 'Cultura feedback-ului constructiv — cum să oferi și cum să primești cu deschidere.' },
-    ],
-    details: [
-      { label: 'Durată lecție', value: '75 min (copii) · 90 min (adulți)' },
-      { label: 'Frecvență', value: '1–2 lecții / săptămână' },
-      { label: 'Mărime grupă', value: 'Maxim 8 cursanți' },
-      { label: 'Format', value: 'Interactiv, bazat pe proiecte' },
-      { label: 'Materiale', value: 'Incluse în taxă' },
-      { label: 'Prezentare finală', value: 'La finalul fiecărui modul' },
-    ],
-    testimonials: [
-      { quote: 'Fiul meu a vorbit în fața clasei fără să tremure. Înainte nici nu ridica mâna.', author: 'Cristina N., mama lui David, 12 ani' },
-      { quote: 'Cursul de leadership m-a ajutat mai mult decât orice training corporate. Concret, aplicabil.', author: 'Andrei V., manager, adult' },
-      { quote: 'Fiica mea a câștigat primul loc la dezbaterile școlare după 3 luni de curs.', author: 'Bogdan I., tata Simonei, 15 ani' },
-    ],
+    copii: {
+      title: 'Leadership pentru Copii',
+      pageTitle: 'Leadership pentru Copii | EduKid Vision',
+      metaDescription: 'Cursuri de leadership pentru copii 8–17 ani. Vorbire în public, lucru în echipă, gândire critică și încredere în sine.',
+      intro: 'Fiecare copil are o voce. Cursurile noastre de leadership creează spații sigure unde copiii descoperă că ideile lor contează, că pot vorbi în fața celorlalți fără frică și că pot conduce prin exemplu. Lucrăm prin jocuri, proiecte și provocări reale — nu din teorie.',
+      forWhom: [
+        { group: 'Copii 8–11 ani', desc: 'Jocuri de cooperare, roluri de lider în proiecte de grup și vorbire în fața colegilor. Construim curaj pas cu pas.' },
+        { group: 'Adolescenți 12–14 ani', desc: 'Dezbateri structurate, proiecte de impact comunitar și tehnici de prezentare în public.' },
+        { group: 'Adolescenți 15–17 ani', desc: 'Prezentări TED-style, negociere, gândire strategică și proiecte de antreprenoriat social.' },
+        { group: 'Pregătire olimpiade & concursuri', desc: 'Retorică, argumentare și tehnici de discurs pentru competiții școlare și concursuri de dezbateri.' },
+      ],
+      curriculum: [
+        { num: '01', title: 'Comunicare & Ascultare', desc: 'Copiii învață să asculte activ, să clarifice înainte de a răspunde și să-și exprime ideile clar.' },
+        { num: '02', title: 'Vorbire în Public', desc: 'Structura unui discurs, gestionarea emoțiilor, contactul vizual și controlul vocii.' },
+        { num: '03', title: 'Lucru în Echipă', desc: 'Roluri în grup, rezolvarea conflictelor și luarea deciziilor prin consens.' },
+        { num: '04', title: 'Gândire Critică & Creativă', desc: 'Analiză de situații, argumentare logică și generarea de soluții inovatoare.' },
+        { num: '05', title: 'Proiecte de Impact', desc: 'Fiecare modul se termină cu un proiect real prezentat colegilor și părinților.' },
+        { num: '06', title: 'Feedback & Reflecție', desc: 'Copiii învață să ofere și să primească feedback constructiv cu deschidere.' },
+      ],
+      details: [
+        { label: 'Durată lecție', value: '75 minute' },
+        { label: 'Frecvență', value: '1–2 lecții / săptămână' },
+        { label: 'Mărime grupă', value: 'Maxim 8 copii' },
+        { label: 'Vârste', value: '8–17 ani' },
+        { label: 'Materiale', value: 'Incluse în taxă' },
+        { label: 'Prezentare finală', value: 'La finalul fiecărui modul' },
+      ],
+      testimonials: [
+        { quote: 'Fiul meu a vorbit în fața clasei fără să tremure. Înainte nici nu ridica mâna.', author: 'Cristina N., mama lui David, 12 ani' },
+        { quote: 'Fiica mea a câștigat primul loc la dezbaterile școlare după 3 luni de curs.', author: 'Bogdan I., tata Simonei, 15 ani' },
+        { quote: 'Nu credeam că un curs poate schimba atât de mult încrederea unui copil. Sunt impresionată.', author: 'Raluca M., mama lui Andrei, 10 ani' },
+      ],
+    },
+    adulti: {
+      title: 'Leadership pentru Adulți',
+      pageTitle: 'Leadership pentru Adulți | EduKid Vision',
+      metaDescription: 'Cursuri de leadership pentru adulți și profesioniști. Comunicare, prezentări, managementul echipei și influență cu integritate.',
+      intro: 'Leadership-ul adevărat nu înseamnă autoritate — înseamnă claritate, prezență și capacitatea de a inspira. Cursurile noastre pentru adulți combină tehnici practice de comunicare, exerciții de vorbire în public și coaching de grup pentru profesioniști care vor să devină lideri autentici.',
+      forWhom: [
+        { group: 'Manageri & Team Leads', desc: 'Tehnici de facilitare, delegare eficientă, gestionarea conflictelor și comunicare în echipă.' },
+        { group: 'Antreprenori & Freelanceri', desc: 'Pitch-uri convingătoare, negociere și construirea autorității personale.' },
+        { group: 'Profesioniști în tranziție', desc: 'Cum să te prezinți cu încredere, să conduci întâlniri și să influențezi fără autoritate formală.' },
+        { group: 'Workshop-uri corporate', desc: 'Sesiuni personalizate pentru echipe: feedback, colaborare și cultură organizațională.' },
+      ],
+      curriculum: [
+        { num: '01', title: 'Comunicare Executivă', desc: 'Claritate în mesaj, adaptarea la public și comunicarea în situații dificile.' },
+        { num: '02', title: 'Vorbire în Public & Prezentări', desc: 'Structura prezentărilor, storytelling profesional și controlul anxietății de scenă.' },
+        { num: '03', title: 'Managementul Echipei', desc: 'Delegare, motivare, gestionarea conflictelor și feedback constructiv.' },
+        { num: '04', title: 'Negociere & Influență', desc: 'Tehnici de negociere bazate pe principii, construirea consensului și persuasiune etică.' },
+        { num: '05', title: 'Inteligență Emoțională', desc: 'Auto-cunoaștere, empatie și gestionarea relațiilor în medii profesionale complexe.' },
+        { num: '06', title: 'Proiect de Leadership', desc: 'Fiecare participant lucrează la un proiect real din organizația sa, cu coaching individual.' },
+      ],
+      details: [
+        { label: 'Durată lecție', value: '90 minute' },
+        { label: 'Frecvență', value: '1–2 sesiuni / săptămână' },
+        { label: 'Mărime grupă', value: 'Maxim 8 cursanți' },
+        { label: 'Format', value: 'Interactiv, bazat pe proiecte' },
+        { label: 'Materiale', value: 'Incluse în taxă' },
+        { label: 'Coaching individual', value: '1 sesiune / modul' },
+      ],
+      testimonials: [
+        { quote: 'Cursul de leadership m-a ajutat mai mult decât orice training corporate. Concret, aplicabil.', author: 'Andrei V., manager, 34 ani' },
+        { quote: 'Am învățat să conduc cu empatie, nu cu frică. Echipa mea a simțit diferența imediat.', author: 'Diana C., team lead' },
+        { quote: 'Am ținut primul meu pitch în fața investitorilor după cursul ăsta. A mers.', author: 'Mihai R., antreprenor' },
+      ],
+    },
   },
 
   it: {
     slug: 'it',
-    title: 'Cursuri de IT',
-    subtitle: 'Programare, robotică și creativitate digitală — de la zero.',
+    tagLabel: 'IT',
     accentColor: '#7CBB6A',
     accentDim: 'rgba(124,187,106,0.10)',
     accentBorder: 'rgba(124,187,106,0.45)',
-    tagLabel: 'IT',
-    pageTitle: 'Cursuri de IT | EduKid Vision',
-    metaDescription: 'Cursuri de programare și IT pentru copii și adulți: Scratch, Python, HTML/CSS, robotică și instrumente digitale moderne.',
-    intro: 'Tehnologia nu ar trebui să intimideze — ar trebui să inspire. Cursurile noastre de IT transformă ecranul dintr-un consumator de timp într-un instrument de creație. Predăm programare, robotică și gândire computațională prin proiecte concrete care au sens pentru fiecare cursant.',
-    forWhom: [
-      { group: 'Copii 7–10 ani', desc: 'Scratch și programare vizuală. Creăm jocuri simple, animații și povești interactive. Zero experiență necesară.' },
-      { group: 'Copii 11–14 ani', desc: 'Python fundamentals, HTML/CSS de bază, robotică cu LEGO Mindstorms. Primul site web real.' },
-      { group: 'Adolescenți 15–17 ani', desc: 'Python avansat, JavaScript, baze de date, proiecte full-stack și pregătire pentru olimpiade IT.' },
-      { group: 'Adulți 18+', desc: 'Automatizare cu Python, instrumente AI, Excel avansat, securitate digitală și productivitate tech.' },
-    ],
-    curriculum: [
-      { num: '01', title: 'Gândire Computațională', desc: 'Algoritmi, logică, depanare și rezolvare structurată de probleme — înainte de orice limbaj.' },
-      { num: '02', title: 'Programare Vizuală', desc: 'Scratch și block-based coding pentru a construi primele jocuri și animații interactive.' },
-      { num: '03', title: 'Python & Web', desc: 'Sintaxă Python, variabile, funcții, bucle. HTML și CSS pentru primul site personal.' },
-      { num: '04', title: 'Robotică', desc: 'Programare hardware, senzori și actuatoare. Proiecte cu Arduino sau LEGO Mindstorms.' },
-      { num: '05', title: 'Proiecte Reale', desc: 'Fiecare modul se finalizează cu un proiect complet: joc, aplicație, robot sau site web.' },
-      { num: '06', title: 'Instrumente Digitale', desc: 'AI tools, colaborare online, securitate digitală și productivitate în era tehnologiei.' },
-    ],
-    details: [
-      { label: 'Durată lecție', value: '60 min (copii) · 90 min (adulți)' },
-      { label: 'Frecvență', value: '1–2 lecții / săptămână' },
-      { label: 'Mărime grupă', value: 'Maxim 6 cursanți' },
-      { label: 'Echipament', value: 'Furnizat de centru' },
-      { label: 'Materiale', value: 'Incluse în taxă' },
-      { label: 'Proiect final', value: 'La finalul fiecărui modul' },
-    ],
-    testimonials: [
-      { quote: 'Copilul meu a creat primul joc în Scratch și l-a arătat la toți prietenii. Nu-l mai smulg de la calculator — dar acum creează, nu consuma.', author: 'Laura C., mama lui Alex, 10 ani' },
-      { quote: 'Am trecut de la zero la propriul site web în 3 luni. Cursul e clar, aplicat și fără frică de eșec.', author: 'Ioana M., adult' },
-      { quote: 'Fiul meu a luat premiul al doilea la concursul de robotică al școlii. Nici nu știa că îi place robotica.', author: 'Vlad B., tata lui Rareș, 13 ani' },
-    ],
+    copii: {
+      title: 'IT & Programare pentru Copii',
+      pageTitle: 'IT și Programare pentru Copii | EduKid Vision',
+      metaDescription: 'Cursuri de programare pentru copii 7–17 ani. Scratch, Python, HTML/CSS, robotică și proiecte digitale creative.',
+      intro: 'Când un copil vede că poate crea un joc, un robot sau un site web, tehnologia devine magie. Cursurile noastre transformă ecranul dintr-un consumator de timp într-un instrument de creație. Predăm programare și robotică prin proiecte reale, fără teorie goală.',
+      forWhom: [
+        { group: 'Copii 7–10 ani', desc: 'Scratch și programare vizuală. Creăm jocuri, animații și povești interactive. Zero experiență necesară.' },
+        { group: 'Copii 11–14 ani', desc: 'Python fundamentals, HTML/CSS de bază și robotică cu LEGO Mindstorms. Primul site web real.' },
+        { group: 'Adolescenți 15–17 ani', desc: 'Python avansat, JavaScript, baze de date, proiecte full-stack și pregătire pentru olimpiade IT.' },
+        { group: 'Pregătire olimpiade IT', desc: 'Algoritmi, structuri de date și rezolvare de probleme pentru concursuri naționale.' },
+      ],
+      curriculum: [
+        { num: '01', title: 'Gândire Computațională', desc: 'Algoritmi, logică și rezolvare structurată de probleme — înainte de orice limbaj de programare.' },
+        { num: '02', title: 'Programare Vizuală (Scratch)', desc: 'Block-based coding pentru a construi primele jocuri, animații și povești interactive.' },
+        { num: '03', title: 'Python Fundamentals', desc: 'Variabile, condiții, bucle și funcții. Primele programe reale care fac lucruri utile.' },
+        { num: '04', title: 'Web: HTML & CSS', desc: 'Structura paginilor web, stilizare și primul site personal publicat online.' },
+        { num: '05', title: 'Robotică', desc: 'Programare hardware, senzori și actuatoare. Proiecte cu Arduino sau LEGO Mindstorms.' },
+        { num: '06', title: 'Proiect Final', desc: 'Fiecare modul se termină cu un proiect complet: joc, aplicație, robot sau site web prezentat public.' },
+      ],
+      details: [
+        { label: 'Durată lecție', value: '60 minute' },
+        { label: 'Frecvență', value: '1–2 lecții / săptămână' },
+        { label: 'Mărime grupă', value: 'Maxim 6 copii' },
+        { label: 'Vârste', value: '7–17 ani' },
+        { label: 'Echipament', value: 'Furnizat de centru' },
+        { label: 'Proiect final', value: 'La finalul fiecărui modul' },
+      ],
+      testimonials: [
+        { quote: 'Copilul meu a creat primul joc în Scratch și l-a arătat la toți prietenii. Acum creează, nu consumă.', author: 'Laura C., mama lui Alex, 10 ani' },
+        { quote: 'Fiul meu a luat premiul al doilea la concursul de robotică al școlii. Nici nu știa că îi place robotica.', author: 'Vlad B., tata lui Rareș, 13 ani' },
+        { quote: 'A venit acasă și a construit un site în aceeași zi. Nu mai putea fi oprit.', author: 'George S., tatăl lui Matei, 14 ani' },
+      ],
+    },
+    adulti: {
+      title: 'IT & Digital pentru Adulți',
+      pageTitle: 'IT și Digital pentru Adulți | EduKid Vision',
+      metaDescription: 'Cursuri de IT pentru adulți 18+. Python, automatizare, instrumente AI, securitate digitală și productivitate tech.',
+      intro: 'Nu trebuie să devii programator pentru a profita de tehnologie. Cursurile noastre pentru adulți te ajută să automatizezi sarcini repetitive, să folosești instrumentele AI din 2025 și să devii mai eficient în tot ce faci. Fără jargon, fără teorie inutilă — doar lucruri care funcționează.',
+      forWhom: [
+        { group: 'Fără experiență tehnică', desc: 'Cursul tău de start: computere, internet, securitate și primii pași în lumea digitală.' },
+        { group: 'Utilizatori de birou', desc: 'Excel avansat, automatizare cu formule, Google Workspace și productivitate digitală.' },
+        { group: 'Profesioniști care vor să automatizeze', desc: 'Python pentru non-programatori: scripturi care îți economisesc ore de muncă repetitivă.' },
+        { group: 'Antreprenori & freelanceri', desc: 'Instrumente AI, marketing digital de bază, site-uri simple și securitate online.' },
+      ],
+      curriculum: [
+        { num: '01', title: 'Baze Digitale Esențiale', desc: 'Organizarea fișierelor, securitatea parolelor, backup și utilizarea eficientă a browserului.' },
+        { num: '02', title: 'Excel & Google Sheets Avansat', desc: 'Formule complexe, tabele pivot, grafice și automatizare cu macro-uri simple.' },
+        { num: '03', title: 'Python pentru Automatizare', desc: 'Scripturi care mută fișiere, trimit emailuri, procesează date — fără a fi programator.' },
+        { num: '04', title: 'Instrumente AI în Viața Reală', desc: 'ChatGPT, Copilot, Midjourney și alte unelte AI folosite practic la locul de muncă.' },
+        { num: '05', title: 'Securitate Digitală', desc: 'Phishing, parole sigure, VPN, autentificare în doi factori și protecția datelor personale.' },
+        { num: '06', title: 'Proiect Aplicat', desc: 'Fiecare participant pleacă cu un tool sau un workflow creat de el care îi rezolvă o problemă reală.' },
+      ],
+      details: [
+        { label: 'Durată lecție', value: '90 minute' },
+        { label: 'Frecvență', value: '1–2 lecții / săptămână' },
+        { label: 'Mărime grupă', value: 'Maxim 6 cursanți' },
+        { label: 'Nivel de start', value: 'Zero cunoștințe necesare' },
+        { label: 'Materiale', value: 'Incluse în taxă' },
+        { label: 'Format', value: 'Fizic sau online' },
+      ],
+      testimonials: [
+        { quote: 'Am trecut de la zero la propriul site web în 3 luni. Cursul e clar, aplicat și fără frică de eșec.', author: 'Ioana M., 41 ani' },
+        { quote: 'Am automatizat un raport care îmi lua 2 ore în fiecare luni. Acum durează 30 de secunde.', author: 'Marius D., contabil' },
+        { quote: 'Cel mai practic curs pe care l-am făcut. Fiecare lecție a rezolvat o problemă reală din munca mea.', author: 'Elena B., antreprenoare' },
+      ],
+    },
   },
 };
 
-/* ─── Routes ──────────────────────────────────────────────────────────── */
 app.get('/', (req, res) => {
   res.render('index', {
     pageTitle: 'Edukid Vision | Cursuri de Engleză, Leadership și IT pentru copii și adulți',
-    metaDescription:
-      'Edukid Vision oferă cursuri de Engleză, Leadership și IT pentru copii și adulți, în grupe mici, cu profesori dedicați și sprijin real pentru familii.',
+    metaDescription: 'Edukid Vision oferă cursuri de Engleză, Leadership și IT pentru copii și adulți, în grupe mici, cu profesori dedicați și sprijin real pentru familii.',
   });
 });
 
-app.get('/cursuri/:slug', (req, res) => {
-  const course = courses[req.params.slug];
+/* Audience-specific course pages */
+app.get('/cursuri/:audience/:slug', (req, res) => {
+  const { audience, slug } = req.params;
+  if (!['copii', 'adulti'].includes(audience)) return res.status(404).send('Pagina nu a fost găsită.');
+  const course = loadCourses().find(c => c.slug === slug && c.audience === audience);
   if (!course) return res.status(404).send('Pagina nu a fost găsită.');
-  res.render('course', {
-    pageTitle: course.pageTitle,
-    metaDescription: course.metaDescription,
-    course,
-  });
+  if (!course.active) return res.status(404).send('Acest curs nu este momentan disponibil.');
+  res.render('course', { pageTitle: course.pageTitle, metaDescription: course.metaDescription, course });
+});
+
+/* Legacy routes — redirect to kids version */
+app.get('/cursuri/:slug', (req, res) => {
+  const exists = loadCourses().some(c => c.slug === req.params.slug);
+  if (exists) return res.redirect(301, `/cursuri/copii/${req.params.slug}`);
+  res.status(404).send('Pagina nu a fost găsită.');
+});
+
+/* ─── Admin routes ────────────────────────────────────────────────────── */
+app.get('/admin/login', (req, res) => {
+  if (req.session.admin) return res.redirect('/admin');
+  res.render('admin/login', { error: null });
+});
+
+app.post('/admin/login', (req, res) => {
+  const { username, password } = req.body;
+  if (username === process.env.ADMIN_USER && password === process.env.ADMIN_PASSWORD) {
+    req.session.admin = true;
+    return res.redirect('/admin');
+  }
+  res.render('admin/login', { error: 'Utilizator sau parolă incorectă.' });
+});
+
+app.post('/admin/logout', (req, res) => {
+  req.session.destroy();
+  res.redirect('/admin/login');
+});
+
+app.get('/admin', requireAdmin, (req, res) => {
+  const courses = loadCourses();
+  res.render('admin/dashboard', { courses });
+});
+
+app.get('/admin/courses/new', requireAdmin, (req, res) => {
+  res.render('admin/course-form', { course: null, error: null });
+});
+
+app.post('/admin/courses', requireAdmin, (req, res) => {
+  try {
+    const courses = loadCourses();
+    const data = JSON.parse(req.body.courseData);
+    const id = `${data.slug}-${data.audience}`;
+    if (courses.find(c => c.id === id)) {
+      return res.render('admin/course-form', { course: null, error: `Cursul "${id}" există deja.` });
+    }
+    courses.push({ id, active: true, ...data });
+    saveCourses(courses);
+    res.redirect('/admin');
+  } catch (e) {
+    res.render('admin/course-form', { course: null, error: 'Date invalide: ' + e.message });
+  }
+});
+
+app.get('/admin/courses/:id/edit', requireAdmin, (req, res) => {
+  const course = loadCourses().find(c => c.id === req.params.id);
+  if (!course) return res.status(404).send('Cursul nu a fost găsit.');
+  res.render('admin/course-form', { course, error: null });
+});
+
+app.post('/admin/courses/:id', requireAdmin, (req, res) => {
+  try {
+    const courses = loadCourses();
+    const idx = courses.findIndex(c => c.id === req.params.id);
+    if (idx === -1) return res.status(404).send('Cursul nu a fost găsit.');
+    const data = JSON.parse(req.body.courseData);
+    courses[idx] = { ...courses[idx], ...data };
+    saveCourses(courses);
+    res.redirect('/admin');
+  } catch (e) {
+    const course = loadCourses().find(c => c.id === req.params.id);
+    res.render('admin/course-form', { course, error: 'Date invalide: ' + e.message });
+  }
+});
+
+app.post('/admin/courses/:id/toggle', requireAdmin, (req, res) => {
+  const courses = loadCourses();
+  const course = courses.find(c => c.id === req.params.id);
+  if (!course) return res.status(404).json({ error: 'Not found' });
+  course.active = !course.active;
+  saveCourses(courses);
+  res.json({ active: course.active });
 });
 
 /* ─── Contact form POST ───────────────────────────────────────────────── */

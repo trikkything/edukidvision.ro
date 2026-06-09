@@ -1,7 +1,5 @@
 const menuToggle = document.querySelector('.menu-toggle');
 const siteNav = document.querySelector('.site-nav');
-const toggleButtons = document.querySelectorAll('.toggle-btn');
-const courseCards = document.querySelectorAll('[data-course-card]');
 const contactForm = document.getElementById('contactForm');
 const toast = document.getElementById('toast');
 
@@ -27,28 +25,36 @@ if (menuToggle && siteNav) {
   });
 }
 
-const updateCourses = (audience) => {
-  toggleButtons.forEach((button) => {
-    const active = button.dataset.audience === audience;
-    button.classList.toggle('is-active', active);
-    button.setAttribute('aria-selected', String(active));
+
+/* -- Cursuri dropdown --------------------------------------------------- */
+(function () {
+  const dropdown = document.getElementById('navDropdownCursuri');
+  if (!dropdown) return;
+
+  const trigger = dropdown.querySelector('.nav-dropdown-trigger');
+
+  trigger.addEventListener('click', function (e) {
+    e.stopPropagation();
+    const isOpen = dropdown.classList.toggle('is-open');
+    trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
   });
 
-  courseCards.forEach((card) => {
-    const description = card.querySelector('.course-description');
-    const age = card.querySelector('.course-age');
-    if (!description || !age) {
-      return;
+  document.addEventListener('click', function (e) {
+    if (!dropdown.contains(e.target)) {
+      dropdown.classList.remove('is-open');
+      trigger.setAttribute('aria-expanded', 'false');
     }
-
-    description.textContent = description.dataset[audience];
-    age.textContent = card.querySelector('.course-meta').dataset[`${audience}Age`];
   });
-};
 
-toggleButtons.forEach((button) => {
-  button.addEventListener('click', () => updateCourses(button.dataset.audience));
-});
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      dropdown.classList.remove('is-open');
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+  });
+})();
+
+
 
 const showToast = (message) => {
   if (!toast) {
@@ -102,4 +108,3 @@ if (contactForm) {
   });
 }
 
-updateCourses('kids');

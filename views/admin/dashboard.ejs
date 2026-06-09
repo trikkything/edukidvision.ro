@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — EduKid Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body class="admin-page">
+
+  <aside class="admin-sidebar">
+    <a href="/admin" class="admin-brand">
+      <img src="/images/logo-mark-400.png" alt="" class="admin-brand-logo" />
+      <div>
+        <div class="admin-brand-name"><span style="color:#7CBB6A">EduKid</span><span style="color:#009B9E"> Vision</span></div>
+        <div class="admin-brand-sub">Admin</div>
+      </div>
+    </a>
+    <nav class="admin-nav">
+      <a href="/admin" class="admin-nav-link is-active">Cursuri</a>
+      <a href="/" class="admin-nav-link" target="_blank">Vezi site ↗</a>
+    </nav>
+    <form method="POST" action="/admin/logout" class="admin-logout">
+      <button type="submit" class="admin-nav-link admin-nav-link--logout">Ieșire</button>
+    </form>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <h1 class="admin-page-title">Cursuri</h1>
+      <a href="/admin/courses/new" class="admin-btn admin-btn--primary">+ Curs nou</a>
+    </div>
+
+    <% const slugOrder = ['engleza','leadership','it']; %>
+    <% const grouped = {}; courses.forEach(c => { if (!grouped[c.slug]) grouped[c.slug] = []; grouped[c.slug].push(c); }); %>
+
+    <% slugOrder.forEach(slug => { if (!grouped[slug]) return; %>
+    <div class="admin-group">
+      <div class="admin-group-header">
+        <span class="admin-group-dot" style="background:<%= grouped[slug][0].accentColor %>"></span>
+        <span class="admin-group-name"><%= grouped[slug][0].tagLabel %></span>
+      </div>
+
+      <% grouped[slug].forEach(course => { %>
+      <div class="admin-course-row" data-id="<%= course.id %>">
+        <div class="admin-course-info">
+          <div class="admin-course-title"><%= course.title %></div>
+          <div class="admin-course-meta">
+            <%= course.audience === 'copii' ? 'Pentru copii' : 'Pentru adulți' %>
+            · <a href="/cursuri/<%= course.audience %>/<%= course.slug %>" target="_blank" class="admin-course-link">Vizualizează ↗</a>
+          </div>
+        </div>
+        <div class="admin-course-actions">
+          <button class="admin-toggle-btn <%= course.active ? 'is-active' : '' %>"
+                  data-id="<%= course.id %>"
+                  title="<%= course.active ? 'Dezactivează' : 'Activează' %>">
+            <span class="toggle-track">
+              <span class="toggle-thumb"></span>
+            </span>
+            <span class="toggle-label"><%= course.active ? 'Activ' : 'Inactiv' %></span>
+          </button>
+          <a href="/admin/courses/<%= course.id %>/edit" class="admin-btn admin-btn--sm">Editează</a>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+    <% }); %>
+
+    <% const otherSlugs = Object.keys(grouped).filter(s => !slugOrder.includes(s)); %>
+    <% otherSlugs.forEach(slug => { %>
+    <div class="admin-group">
+      <div class="admin-group-header">
+        <span class="admin-group-dot" style="background:<%= grouped[slug][0].accentColor %>"></span>
+        <span class="admin-group-name"><%= grouped[slug][0].tagLabel %></span>
+      </div>
+      <% grouped[slug].forEach(course => { %>
+      <div class="admin-course-row" data-id="<%= course.id %>">
+        <div class="admin-course-info">
+          <div class="admin-course-title"><%= course.title %></div>
+          <div class="admin-course-meta">
+            <%= course.audience === 'copii' ? 'Pentru copii' : 'Pentru adulți' %>
+            · <a href="/cursuri/<%= course.audience %>/<%= course.slug %>" target="_blank" class="admin-course-link">Vizualizează ↗</a>
+          </div>
+        </div>
+        <div class="admin-course-actions">
+          <button class="admin-toggle-btn <%= course.active ? 'is-active' : '' %>"
+                  data-id="<%= course.id %>">
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+            <span class="toggle-label"><%= course.active ? 'Activ' : 'Inactiv' %></span>
+          </button>
+          <a href="/admin/courses/<%= course.id %>/edit" class="admin-btn admin-btn--sm">Editează</a>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+    <% }); %>
+
+  </main>
+
+  <div id="adminToast" class="admin-toast"></div>
+
+  <script>
+    document.querySelectorAll('.admin-toggle-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.dataset.id;
+        const res = await fetch(`/admin/courses/${id}/toggle`, { method: 'POST' });
+        const data = await res.json();
+        btn.classList.toggle('is-active', data.active);
+        btn.querySelector('.toggle-label').textContent = data.active ? 'Activ' : 'Inactiv';
+        btn.title = data.active ? 'Dezactivează' : 'Activează';
+        showToast(data.active ? 'Curs activat.' : 'Curs dezactivat.');
+      });
+    });
+
+    function showToast(msg) {
+      const t = document.getElementById('adminToast');
+      t.textContent = msg;
+      t.classList.add('is-visible');
+      setTimeout(() => t.classList.remove('is-visible'), 3000);
+    }
+  </script>
+</body>
+</html>

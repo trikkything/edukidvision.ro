@@ -1,0 +1,196 @@
+/* ─── EduKid Vision — Admin Panel ─────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --teal: #009B9E; --green: #7CBB6A; --ink: #0a0a0a; --ink-muted: #555;
+  --ink-faint: #999; --border: #e5e5e5; --bg: #f8f8f6; --white: #fff;
+  --danger: #e03e3e; --success: #2e7d32;
+  --ff: 'Figtree', system-ui, sans-serif;
+  --ff-display: 'Outfit', system-ui, sans-serif;
+}
+body { font-family: var(--ff); color: var(--ink); background: var(--bg); font-size: 0.9rem; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+input, select, textarea, button { font: inherit; }
+textarea { resize: vertical; }
+
+/* ── Login page ── */
+.admin-login-page {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100vh; background: var(--bg);
+}
+.login-card {
+  width: 360px; background: var(--white);
+  border: 1px solid var(--border); padding: 2.5rem;
+}
+.login-brand {
+  display: flex; align-items: center; gap: 0.65rem;
+  margin-bottom: 1.75rem;
+}
+.login-logo { height: 36px; width: auto; }
+.login-brand-name { font-family: var(--ff-display); font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; }
+.login-title { font-family: var(--ff-display); font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; }
+.login-error { background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; padding: 0.65rem 0.9rem; font-size: 0.82rem; margin-bottom: 1rem; }
+.login-form { display: grid; gap: 1rem; }
+
+/* ── Layout ── */
+.admin-page { display: flex; min-height: 100vh; }
+
+.admin-sidebar {
+  width: 220px; flex-shrink: 0; background: var(--white);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  position: sticky; top: 0; height: 100vh;
+}
+
+.admin-brand {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 1.25rem 1.25rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.admin-brand-logo { height: 32px; width: auto; }
+.admin-brand-name { font-family: var(--ff-display); font-size: 0.95rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
+.admin-brand-sub { font-size: 0.68rem; color: var(--ink-faint); letter-spacing: 0.1em; text-transform: uppercase; }
+
+.admin-nav { padding: 1rem 0.75rem; display: flex; flex-direction: column; gap: 2px; flex: 1; }
+.admin-nav-link {
+  display: block; padding: 0.55rem 0.75rem;
+  font-size: 0.85rem; font-weight: 500; color: var(--ink-muted);
+  border-radius: 4px; transition: background 0.12s, color 0.12s;
+  border: none; background: none; cursor: pointer; width: 100%; text-align: left;
+}
+.admin-nav-link:hover { background: var(--bg); color: var(--ink); }
+.admin-nav-link.is-active { background: #f0fafa; color: var(--teal); font-weight: 600; }
+.admin-nav-link--logout { color: var(--ink-faint); margin-top: auto; }
+.admin-nav-link--logout:hover { color: var(--danger); background: #fff5f5; }
+.admin-logout { padding: 0.75rem; border-top: 1px solid var(--border); }
+
+.admin-main { flex: 1; padding: 2rem; max-width: 900px; }
+
+.admin-topbar {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 2rem; gap: 1rem;
+}
+.admin-page-title { font-family: var(--ff-display); font-size: 1.5rem; font-weight: 700; }
+.admin-back { font-size: 0.78rem; color: var(--ink-faint); display: block; margin-bottom: 0.3rem; }
+.admin-back:hover { color: var(--teal); }
+
+/* ── Buttons ── */
+.admin-btn {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  padding: 0.55rem 1rem; border: 1px solid var(--border);
+  background: var(--white); color: var(--ink);
+  font-size: 0.82rem; font-weight: 600; cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+  text-decoration: none;
+}
+.admin-btn:hover { background: var(--bg); border-color: #ccc; }
+.admin-btn--primary { background: var(--teal); color: #fff; border-color: var(--teal); }
+.admin-btn--primary:hover { background: #007a7d; border-color: #007a7d; }
+.admin-btn--sm { padding: 0.35rem 0.7rem; font-size: 0.78rem; }
+.admin-btn--danger { background: var(--danger); color: #fff; border-color: var(--danger); }
+
+/* ── Course groups on dashboard ── */
+.admin-group { margin-bottom: 2rem; border: 1px solid var(--border); }
+.admin-group-header {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.75rem 1rem; background: var(--white);
+  border-bottom: 1px solid var(--border);
+}
+.admin-group-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.admin-group-name { font-family: var(--ff-display); font-size: 0.85rem; font-weight: 700; letter-spacing: -0.01em; }
+
+.admin-course-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; padding: 0.9rem 1rem;
+  border-bottom: 1px solid var(--border); background: var(--white);
+}
+.admin-course-row:last-child { border-bottom: none; }
+.admin-course-title { font-weight: 600; font-size: 0.88rem; margin-bottom: 0.15rem; }
+.admin-course-meta { font-size: 0.78rem; color: var(--ink-faint); }
+.admin-course-link { color: var(--teal); }
+.admin-course-link:hover { text-decoration: underline; }
+.admin-course-actions { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+
+/* ── Toggle switch ── */
+.admin-toggle-btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: none; border: none; cursor: pointer; padding: 0;
+}
+.toggle-track {
+  width: 36px; height: 20px; background: #d1d5db;
+  border-radius: 10px; position: relative; transition: background 0.2s;
+  flex-shrink: 0;
+}
+.toggle-thumb {
+  position: absolute; top: 3px; left: 3px;
+  width: 14px; height: 14px; background: #fff;
+  border-radius: 50%; transition: transform 0.2s;
+}
+.admin-toggle-btn.is-active .toggle-track { background: var(--teal); }
+.admin-toggle-btn.is-active .toggle-thumb { transform: translateX(16px); }
+.toggle-label { font-size: 0.78rem; font-weight: 600; color: var(--ink-faint); min-width: 48px; }
+.admin-toggle-btn.is-active .toggle-label { color: var(--teal); }
+
+/* ── Form ── */
+.admin-form { display: grid; gap: 0; }
+.admin-form-section {
+  background: var(--white); border: 1px solid var(--border);
+  margin-bottom: 1.25rem;
+}
+.admin-form-section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.9rem 1.25rem; border-bottom: 1px solid var(--border);
+}
+.admin-form-section-title {
+  font-family: var(--ff-display); font-size: 0.95rem; font-weight: 700;
+}
+.admin-form-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1.25rem; padding: 1.25rem;
+}
+.admin-form-error {
+  background: #fef2f2; border: 1px solid #fecaca;
+  color: #b91c1c; padding: 0.75rem 1rem; font-size: 0.82rem;
+  margin-bottom: 1.25rem;
+}
+.admin-label {
+  display: grid; gap: 0.35rem;
+  font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint);
+}
+.admin-hint { font-size: 0.7rem; color: var(--ink-faint); text-transform: none; letter-spacing: 0; font-weight: 400; }
+
+input[type="text"], input[type="password"], input[type="email"], select, textarea {
+  width: 100%; padding: 0.55rem 0.75rem;
+  border: 1px solid var(--border); background: var(--white);
+  color: var(--ink); font-size: 0.88rem; outline: none;
+  transition: border-color 0.15s;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--teal); }
+input[readonly] { background: var(--bg); color: var(--ink-faint); }
+
+/* Array rows */
+.admin-array-list { padding: 0.75rem 1.25rem; display: grid; gap: 0.75rem; }
+.admin-array-row { display: flex; gap: 0.75rem; align-items: flex-start; }
+.admin-array-fields { flex: 1; display: grid; gap: 0.5rem; }
+.admin-array-fields--2col { grid-template-columns: 1fr 1fr; }
+.admin-remove-btn {
+  flex-shrink: 0; width: 28px; height: 28px; margin-top: 6px;
+  background: none; border: 1px solid var(--border); color: var(--ink-faint);
+  cursor: pointer; font-size: 0.75rem; display: flex; align-items: center; justify-content: center;
+  transition: background 0.12s, color 0.12s;
+}
+.admin-remove-btn:hover { background: #fff5f5; color: var(--danger); border-color: #fecaca; }
+
+.admin-form-actions {
+  display: flex; justify-content: flex-end; gap: 0.75rem;
+  padding: 1.25rem 0 2rem;
+}
+
+/* ── Toast ── */
+.admin-toast {
+  position: fixed; bottom: 1.5rem; right: 1.5rem;
+  background: var(--ink); color: #fff; padding: 0.75rem 1.25rem;
+  font-size: 0.82rem; opacity: 0; pointer-events: none;
+  transform: translateY(8px); transition: opacity 0.2s, transform 0.2s;
+}
+.admin-toast.is-visible { opacity: 1; transform: translateY(0); }

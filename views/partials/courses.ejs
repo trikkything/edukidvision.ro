@@ -8,67 +8,91 @@
       </div>
     </div>
 
-    <div class="toggle" role="tablist" aria-label="Selectare public cursuri">
-      <button class="toggle-btn is-active" data-audience="kids" aria-selected="true">Pentru copii</button>
-      <button class="toggle-btn" data-audience="adults" aria-selected="false">Pentru adulți</button>
-    </div>
+    <!-- ── Banda copii ── -->
+    <div class="courses-band">
+      <div class="courses-band-header courses-band-header--kids">
+        <svg class="courses-band-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+        </svg>
+        <span class="courses-band-label">Pentru copii</span>
+        <span class="courses-band-age">Vârste 6–17 ani</span>
+      </div>
 
-    <div>
-
-      <a href="/cursuri/engleza" class="course-row" data-course-card>
+      <a href="/cursuri/copii/engleza" class="course-row">
         <span class="course-num">01</span>
         <div class="course-body">
-          <div class="course-name">Cursuri de Engleză</div>
-          <p class="course-desc course-description"
-             data-kids="Vocabular, fluență, conversație și pregătire pentru examene prin sesiuni dinamice adaptate vârstei."
-             data-adults="Comunicare la locul de muncă, gramatică solidă și engleză practică pentru carieră sau călătorii.">
-            Vocabular, fluență, conversație și pregătire pentru examene prin sesiuni dinamice adaptate vârstei.
-          </p>
-          <div class="course-meta" data-kids-age="Vârste 6–17 ani" data-adults-age="18+ ani">
-            <span class="course-tag course-tag-en">
-              <strong class="course-age">Vârste 6–17 ani</strong>
-            </span>
-          </div>
+          <div class="course-name">Engleză pentru Copii</div>
+          <p class="course-desc">Vocabular, fluență, conversație și pregătire examene Cambridge prin sesiuni dinamice adaptate vârstei.</p>
+          <div><span class="course-tag course-tag-en">Vârste 6–17 ani</span></div>
         </div>
         <span class="course-arrow" aria-hidden="true">→</span>
       </a>
 
-      <a href="/cursuri/leadership" class="course-row" data-course-card>
+      <a href="/cursuri/copii/leadership" class="course-row">
         <span class="course-num">02</span>
         <div class="course-body">
-          <div class="course-name">Cursuri de Leadership</div>
-          <p class="course-desc course-description"
-             data-kids="Vorbire în public, lucru în echipă și rezolvarea de probleme prin proiecte și activități ghidate."
-             data-adults="Abilități de prezentare, coordonare și comunicare pentru viața profesională și personală.">
-            Vorbire în public, lucru în echipă și rezolvarea de probleme prin proiecte și activități ghidate.
-          </p>
-          <div class="course-meta" data-kids-age="Vârste 8–17 ani" data-adults-age="18+ ani">
-            <span class="course-tag course-tag-lead">
-              <strong class="course-age">Vârste 8–17 ani</strong>
-            </span>
-          </div>
+          <div class="course-name">Leadership pentru Copii</div>
+          <p class="course-desc">Vorbire în public, lucru în echipă și rezolvarea de probleme prin proiecte și activități ghidate.</p>
+          <div><span class="course-tag course-tag-lead">Vârste 8–17 ani</span></div>
         </div>
         <span class="course-arrow" aria-hidden="true">→</span>
       </a>
 
-      <a href="/cursuri/it" class="course-row" data-course-card>
+      <a href="/cursuri/copii/it" class="course-row">
         <span class="course-num">03</span>
         <div class="course-body">
-          <div class="course-name">Cursuri de IT</div>
-          <p class="course-desc course-description"
-             data-kids="Bazele programării, robotică și educație digitală prin lecții practice care fac tehnologia accesibilă și creativă."
-             data-adults="Programare pentru începători, instrumente digitale și încredere în folosirea tehnologiei moderne.">
-            Bazele programării, robotică și educație digitală prin lecții practice care fac tehnologia accesibilă și creativă.
-          </p>
-          <div class="course-meta" data-kids-age="Vârste 7–17 ani" data-adults-age="18+ ani">
-            <span class="course-tag course-tag-it">
-              <strong class="course-age">Vârste 7–17 ani</strong>
-            </span>
-          </div>
+          <div class="course-name">IT & Programare pentru Copii</div>
+          <p class="course-desc">Scratch, Python, robotică și educație digitală prin lecții practice care fac tehnologia creativă.</p>
+          <div><span class="course-tag course-tag-it">Vârste 7–17 ani</span></div>
+        </div>
+        <span class="course-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <!-- ── Banda adulți ── -->
+    <div class="courses-band">
+      <div class="courses-band-header courses-band-header--adults">
+        <svg class="courses-band-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="2" y="7" width="20" height="14" rx="0"/>
+          <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+          <line x1="12" y1="12" x2="12" y2="16"/>
+          <line x1="10" y1="14" x2="14" y2="14"/>
+        </svg>
+        <span class="courses-band-label">Pentru adulți</span>
+        <span class="courses-band-age">18+ ani</span>
+      </div>
+
+      <a href="/cursuri/adulti/engleza" class="course-row">
+        <span class="course-num">01</span>
+        <div class="course-body">
+          <div class="course-name">Engleză pentru Adulți</div>
+          <p class="course-desc">Business English, IELTS, TOEFL și conversație fluentă — engleză care deschide uși.</p>
+          <div><span class="course-tag course-tag-en">18+ ani</span></div>
         </div>
         <span class="course-arrow" aria-hidden="true">→</span>
       </a>
 
+      <a href="/cursuri/adulti/leadership" class="course-row">
+        <span class="course-num">02</span>
+        <div class="course-body">
+          <div class="course-name">Leadership pentru Adulți</div>
+          <p class="course-desc">Prezentări, negociere, managementul echipei și comunicare profesională cu impact real.</p>
+          <div><span class="course-tag course-tag-lead">18+ ani</span></div>
+        </div>
+        <span class="course-arrow" aria-hidden="true">→</span>
+      </a>
+
+      <a href="/cursuri/adulti/it" class="course-row">
+        <span class="course-num">03</span>
+        <div class="course-body">
+          <div class="course-name">IT & Digital pentru Adulți</div>
+          <p class="course-desc">Python, automatizare, instrumente AI și productivitate digitală — fără a fi programator.</p>
+          <div><span class="course-tag course-tag-it">18+ ani</span></div>
+        </div>
+        <span class="course-arrow" aria-hidden="true">→</span>
+      </a>
     </div>
+
   </div>
 </section>

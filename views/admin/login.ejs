@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — EduKid Vision</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body class="admin-login-page">
+
+  <div class="login-card">
+    <div class="login-brand">
+      <img src="/images/logo-mark-400.png" alt="EduKid Vision" class="login-logo" />
+      <span class="login-brand-name">
+        <span style="color:#7CBB6A">EduKid</span><span style="color:#009B9E"> Vision</span>
+      </span>
+    </div>
+    <h1 class="login-title">Panou de administrare</h1>
+
+    <% if (error) { %>
+    <p class="login-error"><%= error %></p>
+    <% } %>
+
+    <form method="POST" action="/admin/login" class="login-form">
+      <label class="admin-label">
+        Utilizator
+        <input type="text" name="username" autocomplete="username" required />
+      </label>
+      <label class="admin-label">
+        Parolă
+        <input type="password" name="password" autocomplete="current-password" required />
+      </label>
+      <button type="submit" class="admin-btn admin-btn--primary">Intră în panou</button>
+    </form>
+  </div>
+
+</body>
+</html>

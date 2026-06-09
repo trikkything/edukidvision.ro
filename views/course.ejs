@@ -30,7 +30,21 @@
       <!-- ── Course Hero ── -->
       <section class="course-hero">
         <div class="container">
-          <a href="/#courses" class="back-link">← Toate cursurile</a>
+          <div class="audience-switcher">
+            <a href="/#courses" class="back-link" style="margin-bottom:0">← Toate cursurile</a>
+            <div class="audience-switcher-tabs">
+              <a href="/cursuri/copii/<%= course.slug %>"
+                 class="audience-tab<%= course.audience === 'copii' ? ' is-active' : '' %>">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                Copii
+              </a>
+              <a href="/cursuri/adulti/<%= course.slug %>"
+                 class="audience-tab<%= course.audience === 'adulti' ? ' is-active' : '' %>">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="0"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+                Adulți
+              </a>
+            </div>
+          </div>
           <div class="course-hero-inner">
             <div>
               <span class="label course-accent" style="margin-bottom:1rem"><%= course.tagLabel %></span>

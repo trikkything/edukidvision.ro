@@ -1,3 +1,23 @@
+<%
+  /* Build lookup of active course slugs per audience from res.locals */
+  const _ac = typeof activeCourses !== 'undefined' ? activeCourses : [];
+  const _isActive = (audience, slug) => _ac.some(c => c.audience === audience && c.slug === slug);
+  const _kidsAny   = _ac.some(c => c.audience === 'copii');
+  const _adultsAny = _ac.some(c => c.audience === 'adulti');
+
+  /* Per-course metadata for dropdown rendering */
+  const _courses = [
+    { slug:'engleza',    label:'Engleză',      subKids:'Vocabular, fluență, Cambridge',   subAdults:'Business, IELTS, conversație', dot:'#FEAF4A' },
+    { slug:'leadership', label:'Leadership',   subKids:'Vorbire în public, echipă',       subAdults:'Prezentări, negociere, echipă', dot:'#FE7875' },
+    { slug:'it',         label:'IT',           subKids:'Scratch, Python, robotică',       subAdults:'Python, AI tools, productivitate', dot:'#7CBB6A' },
+  ];
+  /* Add any other active courses not in the standard 3 */
+  _ac.forEach(c => {
+    if (!_courses.find(x => x.slug === c.slug)) {
+      _courses.push({ slug: c.slug, label: c.tagLabel, subKids: '', subAdults: '', dot: c.accentColor });
+    }
+  });
+%>
 <header class="site-header">
   <div class="container nav-wrap">
 
@@ -15,9 +35,61 @@
     <button class="menu-toggle" aria-expanded="false" aria-controls="siteNav">Meniu</button>
 
     <nav id="siteNav" class="site-nav">
-      <a href="/#courses">Cursuri</a>
+
+      <!-- Cursuri dropdown -->
+      <div class="nav-dropdown" id="navDropdownCursuri">
+        <button class="nav-dropdown-trigger" aria-expanded="false" aria-controls="dropdownCursuri">
+          Cursuri
+          <svg class="nav-dropdown-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="2 3 5 7 8 3"/>
+          </svg>
+        </button>
+        <div class="nav-dropdown-panel" id="dropdownCursuri" role="menu">
+          <div class="nav-dropdown-cols">
+
+            <!-- Copii column — only rendered if at least one kids course is active -->
+            <% if (_kidsAny) { %>
+            <div class="nav-dropdown-col">
+              <p class="nav-dropdown-col-label" style="color:var(--teal)">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-1px;margin-right:4px"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                Pentru copii
+              </p>
+              <% _courses.filter(c => _isActive('copii', c.slug)).forEach(c => { %>
+              <a href="/cursuri/copii/<%= c.slug %>" class="nav-dropdown-item" role="menuitem">
+                <span class="nav-dropdown-dot" style="background:<%= c.dot %>"></span>
+                <span>
+                  <strong><%= c.label %></strong>
+                  <% if (c.subKids) { %><span class="nav-dropdown-sub"><%= c.subKids %></span><% } %>
+                </span>
+              </a>
+              <% }); %>
+            </div>
+            <% } %>
+
+            <!-- Adulți column — only rendered if at least one adults course is active -->
+            <% if (_adultsAny) { %>
+            <div class="nav-dropdown-col<%= _kidsAny ? ' nav-dropdown-col--right' : '' %>">
+              <p class="nav-dropdown-col-label" style="color:var(--orange)">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-1px;margin-right:4px"><rect x="2" y="7" width="20" height="14" rx="0"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+                Pentru adulți
+              </p>
+              <% _courses.filter(c => _isActive('adulti', c.slug)).forEach(c => { %>
+              <a href="/cursuri/adulti/<%= c.slug %>" class="nav-dropdown-item" role="menuitem">
+                <span class="nav-dropdown-dot" style="background:<%= c.dot %>"></span>
+                <span>
+                  <strong><%= c.label %></strong>
+                  <% if (c.subAdults) { %><span class="nav-dropdown-sub"><%= c.subAdults %></span><% } %>
+                </span>
+              </a>
+              <% }); %>
+            </div>
+            <% } %>
+
+          </div>
+        </div>
+      </div>
+
       <a href="/#about">Despre noi</a>
-      <a href="/#testimonials">Testimoniale</a>
       <a href="/#contact">Contact</a>
 
       <div class="nav-social" aria-label="Rețele sociale">

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= course ? 'Editează curs' : 'Curs nou' %> — EduKid Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body class="admin-page">
+
+  <aside class="admin-sidebar">
+    <a href="/admin" class="admin-brand">
+      <img src="/images/logo-mark-400.png" alt="" class="admin-brand-logo" />
+      <div>
+        <div class="admin-brand-name"><span style="color:#7CBB6A">EduKid</span><span style="color:#009B9E"> Vision</span></div>
+        <div class="admin-brand-sub">Admin</div>
+      </div>
+    </a>
+    <nav class="admin-nav">
+      <a href="/admin" class="admin-nav-link">Cursuri</a>
+      <a href="/" class="admin-nav-link" target="_blank">Vezi site ↗</a>
+    </nav>
+    <form method="POST" action="/admin/logout" class="admin-logout">
+      <button type="submit" class="admin-nav-link admin-nav-link--logout">Ieșire</button>
+    </form>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <div>
+        <a href="/admin" class="admin-back">← Înapoi la cursuri</a>
+        <h1 class="admin-page-title"><%= course ? 'Editează: ' + course.title : 'Curs nou' %></h1>
+      </div>
+    </div>
+
+    <% if (error) { %><p class="admin-form-error"><%= error %></p><% } %>
+
+    <form id="courseForm" method="POST"
+          action="<%= course ? '/admin/courses/' + course.id : '/admin/courses' %>"
+          class="admin-form">
+      <input type="hidden" name="courseData" id="courseData" />
+
+      <!-- Basic fields -->
+      <div class="admin-form-section">
+        <h2 class="admin-form-section-title">Informații de bază</h2>
+        <div class="admin-form-grid">
+          <label class="admin-label">
+            Slug (URL)
+            <input type="text" id="f-slug" placeholder="ex: engleza, matematica" value="<%= course ? course.slug : '' %>" <%= course ? 'readonly' : '' %> />
+            <span class="admin-hint">Folosit în URL: /cursuri/copii/<strong>slug</strong></span>
+          </label>
+          <label class="admin-label">
+            Audiență
+            <select id="f-audience" <%= course ? 'disabled' : '' %>>
+              <option value="copii" <%= (course && course.audience === 'copii') ? 'selected' : '' %>>Pentru copii</option>
+              <option value="adulti" <%= (course && course.audience === 'adulti') ? 'selected' : '' %>>Pentru adulți</option>
+            </select>
+          </label>
+          <label class="admin-label">
+            Etichetă (tag)
+            <input type="text" id="f-tagLabel" placeholder="ex: Engleză" value="<%= course ? course.tagLabel : '' %>" />
+          </label>
+          <label class="admin-label">
+            Culoare accent
+            <div style="display:flex;gap:8px;align-items:center">
+              <input type="color" id="f-accentColor" value="<%= course ? course.accentColor : '#009B9E' %>" style="width:44px;height:36px;padding:2px;border:1px solid #e5e5e5;cursor:pointer" />
+              <input type="text" id="f-accentColorHex" placeholder="#009B9E" value="<%= course ? course.accentColor : '' %>" style="flex:1" />
+            </div>
+          </label>
+          <label class="admin-label" style="grid-column:1/-1">
+            Titlu pagină
+            <input type="text" id="f-title" placeholder="ex: Engleză pentru Copii" value="<%= course ? course.title : '' %>" />
+          </label>
+          <label class="admin-label" style="grid-column:1/-1">
+            Meta title (SEO)
+            <input type="text" id="f-pageTitle" placeholder="ex: Engleză pentru Copii | EduKid Vision" value="<%= course ? course.pageTitle : '' %>" />
+          </label>
+          <label class="admin-label" style="grid-column:1/-1">
+            Meta description (SEO)
+            <textarea id="f-metaDescription" rows="2" placeholder="Scurtă descriere pentru motoarele de căutare..."><%= course ? course.metaDescription : '' %></textarea>
+          </label>
+          <label class="admin-label" style="grid-column:1/-1">
+            Introducere (paragraf hero)
+            <textarea id="f-intro" rows="4" placeholder="Descriere principală a cursului..."><%= course ? course.intro : '' %></textarea>
+          </label>
+        </div>
+      </div>
+
+      <!-- For Whom -->
+      <div class="admin-form-section">
+        <div class="admin-form-section-header">
+          <h2 class="admin-form-section-title">Grupele noastre (Pentru cine)</h2>
+          <button type="button" class="admin-btn admin-btn--sm" onclick="addRow('forWhom')">+ Adaugă grupă</button>
+        </div>
+        <div id="forWhom-list" class="admin-array-list">
+          <% if (course) { course.forWhom.forEach((w, i) => { %>
+          <div class="admin-array-row" data-section="forWhom">
+            <div class="admin-array-fields">
+              <input type="text" placeholder="Grupă (ex: Copii 6–10 ani)" value="<%= w.group %>" data-key="group" />
+              <textarea placeholder="Descriere..." rows="2" data-key="desc"><%= w.desc %></textarea>
+            </div>
+            <button type="button" class="admin-remove-btn" onclick="removeRow(this)">✕</button>
+          </div>
+          <% }); } %>
+        </div>
+      </div>
+
+      <!-- Curriculum -->
+      <div class="admin-form-section">
+        <div class="admin-form-section-header">
+          <h2 class="admin-form-section-title">Curriculum</h2>
+          <button type="button" class="admin-btn admin-btn--sm" onclick="addRow('curriculum')">+ Adaugă modul</button>
+        </div>
+        <div id="curriculum-list" class="admin-array-list">
+          <% if (course) { course.curriculum.forEach((c, i) => { %>
+          <div class="admin-array-row" data-section="curriculum">
+            <div class="admin-array-fields">
+              <input type="text" placeholder="Titlu modul" value="<%= c.title %>" data-key="title" />
+              <textarea placeholder="Descriere modul..." rows="2" data-key="desc"><%= c.desc %></textarea>
+            </div>
+            <button type="button" class="admin-remove-btn" onclick="removeRow(this)">✕</button>
+          </div>
+          <% }); } %>
+        </div>
+      </div>
+
+      <!-- Details -->
+      <div class="admin-form-section">
+        <div class="admin-form-section-header">
+          <h2 class="admin-form-section-title">Detalii practice</h2>
+          <button type="button" class="admin-btn admin-btn--sm" onclick="addRow('details')">+ Adaugă detaliu</button>
+        </div>
+        <div id="details-list" class="admin-array-list">
+          <% if (course) { course.details.forEach((d, i) => { %>
+          <div class="admin-array-row" data-section="details">
+            <div class="admin-array-fields admin-array-fields--2col">
+              <input type="text" placeholder="Etichetă (ex: Durată lecție)" value="<%= d.label %>" data-key="label" />
+              <input type="text" placeholder="Valoare (ex: 60 minute)" value="<%= d.value %>" data-key="value" />
+            </div>
+            <button type="button" class="admin-remove-btn" onclick="removeRow(this)">✕</button>
+          </div>
+          <% }); } %>
+        </div>
+      </div>
+
+      <!-- Testimonials -->
+      <div class="admin-form-section">
+        <div class="admin-form-section-header">
+          <h2 class="admin-form-section-title">Testimoniale</h2>
+          <button type="button" class="admin-btn admin-btn--sm" onclick="addRow('testimonials')">+ Adaugă testimonial</button>
+        </div>
+        <div id="testimonials-list" class="admin-array-list">
+          <% if (course) { course.testimonials.forEach((t, i) => { %>
+          <div class="admin-array-row" data-section="testimonials">
+            <div class="admin-array-fields">
+              <textarea placeholder="Citat..." rows="2" data-key="quote"><%= t.quote %></textarea>
+              <input type="text" placeholder="Autor (ex: Maria D., mamă)" value="<%= t.author %>" data-key="author" />
+            </div>
+            <button type="button" class="admin-remove-btn" onclick="removeRow(this)">✕</button>
+          </div>
+          <% }); } %>
+        </div>
+      </div>
+
+      <div class="admin-form-actions">
+        <a href="/admin" class="admin-btn">Anulează</a>
+        <button type="submit" class="admin-btn admin-btn--primary">Salvează cursul</button>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    // Sync color picker with hex input
+    const colorPicker = document.getElementById('f-accentColor');
+    const colorHex    = document.getElementById('f-accentColorHex');
+    colorPicker.addEventListener('input', () => { colorHex.value = colorPicker.value; });
+    colorHex.addEventListener('input', () => {
+      if (/^#[0-9A-Fa-f]{6}$/.test(colorHex.value)) colorPicker.value = colorHex.value;
+    });
+
+    // Template HTML for each section
+    const templates = {
+      forWhom:      `<input type="text" placeholder="Grupă (ex: Copii 6–10 ani)" data-key="group" /><textarea placeholder="Descriere..." rows="2" data-key="desc"></textarea>`,
+      curriculum:   `<input type="text" placeholder="Titlu modul" data-key="title" /><textarea placeholder="Descriere modul..." rows="2" data-key="desc"></textarea>`,
+      details:      `<input type="text" placeholder="Etichetă (ex: Durată lecție)" data-key="label" /><input type="text" placeholder="Valoare (ex: 60 minute)" data-key="value" />`,
+      testimonials: `<textarea placeholder="Citat..." rows="2" data-key="quote"></textarea><input type="text" placeholder="Autor (ex: Maria D., mamă)" data-key="author" />`,
+    };
+    const twoCol = ['details'];
+
+    function addRow(section) {
+      const list = document.getElementById(section + '-list');
+      const row  = document.createElement('div');
+      row.className = 'admin-array-row';
+      row.dataset.section = section;
+      row.innerHTML = `
+        <div class="admin-array-fields${twoCol.includes(section) ? ' admin-array-fields--2col' : ''}">
+          ${templates[section]}
+        </div>
+        <button type="button" class="admin-remove-btn" onclick="removeRow(this)">✕</button>`;
+      list.appendChild(row);
+      row.querySelector('input, textarea').focus();
+    }
+
+    function removeRow(btn) {
+      btn.closest('.admin-array-row').remove();
+    }
+
+    // Serialize on submit
+    document.getElementById('courseForm').addEventListener('submit', e => {
+      const accentColor = colorHex.value || colorPicker.value;
+      // Generate dim + border from hex
+      const hex = accentColor.replace('#','');
+      const r = parseInt(hex.substr(0,2),16), g = parseInt(hex.substr(2,2),16), b = parseInt(hex.substr(4,2),16);
+
+      const data = {
+        slug:            document.getElementById('f-slug').value.trim(),
+        audience:        document.getElementById('f-audience').value,
+        tagLabel:        document.getElementById('f-tagLabel').value.trim(),
+        accentColor,
+        accentDim:       `rgba(${r},${g},${b},0.10)`,
+        accentBorder:    `rgba(${r},${g},${b},0.45)`,
+        title:           document.getElementById('f-title').value.trim(),
+        pageTitle:       document.getElementById('f-pageTitle').value.trim(),
+        metaDescription: document.getElementById('f-metaDescription').value.trim(),
+        intro:           document.getElementById('f-intro').value.trim(),
+        forWhom:         collectRows('forWhom',      ['group','desc']),
+        curriculum:      collectRows('curriculum',   ['title','desc']).map((c,i) => ({num: String(i+1).padStart(2,'0'), ...c})),
+        details:         collectRows('details',      ['label','value']),
+        testimonials:    collectRows('testimonials', ['quote','author']),
+      };
+
+      document.getElementById('courseData').value = JSON.stringify(data);
+    });
+
+    function collectRows(section, keys) {
+      return [...document.querySelectorAll(`#${section}-list .admin-array-row`)].map(row => {
+        const obj = {};
+        keys.forEach(k => {
+          const el = row.querySelector(`[data-key="${k}"]`);
+          obj[k] = el ? el.value.trim() : '';
+        });
+        return obj;
+      });
+    }
+  </script>
+</body>
+</html>
