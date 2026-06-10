@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Articole — EduKid Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/admin.css" />
+  <style>
+    .feature-btn {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.35rem 0.7rem; border: 1px solid var(--border);
+      background: var(--white); color: var(--ink-faint);
+      font-size: 0.78rem; font-weight: 600; cursor: pointer;
+      transition: all 0.12s; white-space: nowrap;
+    }
+    .feature-btn:hover { border-color: #f59e0b; color: #f59e0b; background: #fffbeb; }
+    .feature-btn.is-featured { background: #fffbeb; color: #d97706; border-color: #fcd34d; }
+    .feature-btn svg { flex-shrink: 0; }
+    .featured-count {
+      font-size: 0.75rem; color: var(--ink-faint);
+      padding: 0.25rem 0.6rem; background: var(--bg);
+      border: 1px solid var(--border); margin-left: auto;
+    }
+    .featured-count strong { color: #d97706; }
+  </style>
+</head>
+<body class="admin-page">
+
+  <aside class="admin-sidebar">
+    <a href="/admin" class="admin-brand">
+      <img src="/images/logo-mark-400.png" alt="" class="admin-brand-logo" />
+      <div>
+        <div class="admin-brand-name"><span style="color:#7CBB6A">EduKid</span><span style="color:#009B9E"> Vision</span></div>
+        <div class="admin-brand-sub">Admin</div>
+      </div>
+    </a>
+    <nav class="admin-nav">
+      <a href="/admin" class="admin-nav-link">Cursuri</a>
+      <a href="/admin/posts" class="admin-nav-link is-active">Articole</a>
+      <a href="/" class="admin-nav-link" target="_blank">Vezi site ↗</a>
+    </nav>
+    <form method="POST" action="/admin/logout" class="admin-logout">
+      <button type="submit" class="admin-nav-link admin-nav-link--logout">Ieșire</button>
+    </form>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <div>
+        <h1 class="admin-page-title">Articole & Noutăți</h1>
+        <p style="font-size:0.78rem;color:var(--ink-faint);margin-top:0.25rem">
+          Până la 6 articole pe prima pagină · <strong style="color:#d97706"><%= posts.filter(p => p.featured).length %>/3</strong> articole promovate
+        </p>
+      </div>
+      <a href="/admin/posts/new" class="admin-btn admin-btn--primary">+ Articol nou</a>
+    </div>
+
+    <% if (posts.length === 0) { %>
+    <p style="color:var(--ink-faint);padding:2rem 0">Nu există articole. Adaugă primul!</p>
+    <% } else { %>
+    <div class="admin-group">
+      <% posts.forEach(function(p) { %>
+      <div class="admin-course-row" id="post-row-<%= p.id %>">
+        <div style="display:flex;gap:0.75rem;align-items:center;flex:1;min-width:0">
+          <% if (p.coverImage) { %>
+          <img src="<%= p.coverImage %>" alt="" style="width:52px;height:40px;object-fit:cover;flex-shrink:0;border:1px solid var(--border)" />
+          <% } else { %>
+          <div style="width:52px;height:40px;background:var(--bg);border:1px solid var(--border);flex-shrink:0"></div>
+          <% } %>
+          <div style="min-width:0">
+            <p class="admin-course-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+              <% if (p.featured) { %>
+              <span style="color:#d97706;font-size:0.78rem;margin-right:0.4rem" title="Articol promovat">★</span>
+              <% } %>
+              <%= p.title %>
+            </p>
+            <p class="admin-course-meta">
+              <span><%= p.category %></span>
+              <span style="margin:0 0.4rem">·</span>
+              <span><%= new Date(p.publishDate).toLocaleDateString('ro-RO', { day:'numeric', month:'short', year:'numeric' }) %></span>
+              <% if (p.active) { %>
+              <span style="margin:0 0.4rem">·</span>
+              <a href="/noutati/<%= p.slug %>" class="admin-course-link" target="_blank">Vizualizează ↗</a>
+              <% } %>
+            </p>
+          </div>
+        </div>
+        <div class="admin-course-actions">
+          <button
+            class="feature-btn <%= p.featured ? 'is-featured' : '' %>"
+            data-id="<%= p.id %>"
+            onclick="featurePost(this)"
+            title="<%= p.featured ? 'Elimină din promovate' : 'Promovează pe prima pagină' %>"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="<%= p.featured ? 'currentColor' : 'none' %>" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+            <%= p.featured ? 'Promovat' : 'Promovează' %>
+          </button>
+          <button
+            class="admin-toggle-btn <%= p.active ? 'is-active' : '' %>"
+            data-id="<%= p.id %>"
+            onclick="togglePost(this)"
+            title="<%= p.active ? 'Dezactivează' : 'Activează' %>"
+          >
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+            <span class="toggle-label"><%= p.active ? 'Activ' : 'Inactiv' %></span>
+          </button>
+          <a href="/admin/posts/<%= p.id %>/edit" class="admin-btn admin-btn--sm">Editează</a>
+          <form method="POST" action="/admin/posts/<%= p.id %>/delete" style="display:inline" onsubmit="return confirm('Ești sigur că vrei să ștergi acest articol?')">
+            <button type="submit" class="admin-btn admin-btn--sm admin-btn--danger">Șterge</button>
+          </form>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+    <% } %>
+  </main>
+
+  <div class="admin-toast" id="adminToast"></div>
+
+  <script>
+    function togglePost(btn) {
+      const id = btn.dataset.id;
+      fetch(`/admin/posts/${id}/toggle`, { method: 'POST' })
+        .then(r => r.json())
+        .then(data => {
+          btn.classList.toggle('is-active', data.active);
+          btn.querySelector('.toggle-label').textContent = data.active ? 'Activ' : 'Inactiv';
+          btn.title = data.active ? 'Dezactivează' : 'Activează';
+          showToast(data.active ? 'Articol activat' : 'Articol dezactivat');
+        });
+    }
+
+    function featurePost(btn) {
+      const id = btn.dataset.id;
+      fetch(`/admin/posts/${id}/feature`, { method: 'POST' })
+        .then(async r => {
+          if (!r.ok) {
+            const err = await r.json();
+            showToast('⚠ ' + err.error);
+            return;
+          }
+          return r.json();
+        })
+        .then(data => {
+          if (!data) return;
+          const isFeatured = data.featured;
+          btn.classList.toggle('is-featured', isFeatured);
+          btn.title = isFeatured ? 'Elimină din promovate' : 'Promovează pe prima pagină';
+          const svg = btn.querySelector('svg');
+          svg.setAttribute('fill', isFeatured ? 'currentColor' : 'none');
+          btn.childNodes[btn.childNodes.length - 1].textContent = ' ' + (isFeatured ? 'Promovat' : 'Promovează');
+
+          // Update star in title
+          const row = document.getElementById('post-row-' + id);
+          const titleEl = row.querySelector('.admin-course-title');
+          const existingStar = titleEl.querySelector('span[title="Articol promovat"]');
+          if (isFeatured && !existingStar) {
+            const star = document.createElement('span');
+            star.style.cssText = 'color:#d97706;font-size:0.78rem;margin-right:0.4rem';
+            star.title = 'Articol promovat';
+            star.textContent = '★';
+            titleEl.prepend(star);
+          } else if (!isFeatured && existingStar) {
+            existingStar.remove();
+          }
+
+          // Update counter
+          document.querySelectorAll('[data-id]').forEach(b => {
+            if (b.classList.contains('feature-btn') && b.classList.contains('is-featured')) {
+              // just re-read from DOM
+            }
+          });
+          showToast(isFeatured ? '★ Articol promovat pe prima pagină' : 'Articol scos din promovate');
+        });
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('adminToast');
+      t.textContent = msg;
+      t.classList.add('is-visible');
+      setTimeout(() => t.classList.remove('is-visible'), 2800);
+    }
+  </script>
+</body>
+</html>

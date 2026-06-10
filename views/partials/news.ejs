@@ -1,38 +1,77 @@
-<section class="section" style="padding-top:0">
+<% if (typeof latestPosts !== 'undefined' && latestPosts.length > 0) { %>
+<%
+  const _featured    = latestPosts.filter(p => p.featured);
+  const _nonFeatured = latestPosts.filter(p => !p.featured);
+%>
+<section class="section-news-preview" id="noutati">
   <div class="container">
 
-    <div class="section-header">
+    <div class="section-header" style="margin-bottom:0">
       <div>
-        <span class="label" style="color:var(--coral)">Noutăți</span>
-        <h2>Curs de vară 2026.</h2>
+        <span class="label label-teal">Noutăți</span>
+        <h2>Ultimele noutăți.</h2>
       </div>
     </div>
 
-    <div class="news-grid">
-      <div class="news-copy">
-        <p>
-          În această vară pregătim un program special pentru copii cu vârste între 7 și 14 ani,
-          unde combinăm limba engleză, activități de leadership și ateliere digitale într-un format
-          energic și prietenos.
-        </p>
-        <p>
-          Cursul include jocuri educative, exerciții de conversație, proiecte în echipă și
-          provocări practice care îi ajută pe copii să învețe cu plăcere și să-și facă noi prieteni.
-        </p>
-        <div class="news-highlights">
-          <span class="news-tag">Iulie – August</span>
-          <span class="news-tag">Grupe mici</span>
-          <span class="news-tag">Locuri limitate</span>
+    <!-- Featured cards — full-width horizontal -->
+    <% if (_featured.length > 0) { %>
+    <div class="news-featured-list">
+      <% _featured.forEach(function(p) { %>
+      <article class="news-card--featured">
+        <% if (p.coverImage) { %>
+        <a href="/noutati/<%= p.slug %>" class="news-featured-image-wrap">
+          <img src="<%= p.coverImage %>" alt="<%= p.title %>" class="news-featured-image" loading="lazy" />
+        </a>
+        <% } else { %>
+        <div class="news-featured-image-wrap news-featured-image-wrap--empty"></div>
+        <% } %>
+        <div class="news-featured-body">
+          <div class="news-card-meta">
+            <span class="news-card-featured">★ Promovat</span>
+            <span class="news-card-category"><%= p.category %></span>
+            <span class="news-card-date"><%= new Date(p.publishDate).toLocaleDateString('ro-RO', { day:'numeric', month:'long', year:'numeric' }) %></span>
+          </div>
+          <h3 class="news-featured-title">
+            <a href="/noutati/<%= p.slug %>"><%= p.title %></a>
+          </h3>
+          <p class="news-featured-excerpt"><%= p.excerpt %></p>
+          <a href="/noutati/<%= p.slug %>" class="btn btn-outline btn--sm">Citește articolul →</a>
         </div>
-        <a href="#contact" class="btn btn-primary">Înscrie-te la cursul de vară</a>
-      </div>
-      <div class="news-visual">
-        <img
-          src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=80"
-          alt="Copii participând la un curs de vară interactiv"
-        />
-      </div>
+      </article>
+      <% }); %>
+    </div>
+    <% } %>
+
+    <!-- Regular cards grid -->
+    <% if (_nonFeatured.length > 0) { %>
+    <div class="news-grid<%= _featured.length > 0 ? ' news-grid--below-featured' : '' %>">
+      <% _nonFeatured.forEach(function(p) { %>
+      <article class="news-card">
+        <% if (p.coverImage) { %>
+        <a href="/noutati/<%= p.slug %>" class="news-card-image-wrap">
+          <img src="<%= p.coverImage %>" alt="<%= p.title %>" class="news-card-image" loading="lazy" />
+        </a>
+        <% } %>
+        <div class="news-card-body">
+          <div class="news-card-meta">
+            <span class="news-card-category"><%= p.category %></span>
+            <span class="news-card-date"><%= new Date(p.publishDate).toLocaleDateString('ro-RO', { day:'numeric', month:'long', year:'numeric' }) %></span>
+          </div>
+          <h3 class="news-card-title">
+            <a href="/noutati/<%= p.slug %>"><%= p.title %></a>
+          </h3>
+          <p class="news-card-excerpt"><%= p.excerpt %></p>
+          <a href="/noutati/<%= p.slug %>" class="news-card-cta">Citește mai mult →</a>
+        </div>
+      </article>
+      <% }); %>
+    </div>
+    <% } %>
+
+    <div class="news-preview-footer">
+      <a href="/noutati" class="btn btn-outline">Toate noutățile</a>
     </div>
 
   </div>
 </section>
+<% } %>

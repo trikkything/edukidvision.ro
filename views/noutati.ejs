@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ro">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= pageTitle %></title>
+    <meta name="description" content="<%= metaDescription %>" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+
+    <%- include('partials/header') %>
+
+    <main>
+      <section class="news-hero">
+        <div class="container">
+          <span class="label label-teal">Noutăți</span>
+          <h1>Ultimele noutăți.</h1>
+        </div>
+      </section>
+
+      <section class="section section--no-top">
+        <div class="container">
+          <% if (posts.length === 0) { %>
+          <p style="color:var(--ink-muted);padding:3rem 0">Nu există articole publicate momentan.</p>
+          <% } else { %>
+          <%
+            const _featured    = posts.filter(p => p.featured);
+            const _nonFeatured = posts.filter(p => !p.featured);
+          %>
+
+          <!-- Featured cards — full-width horizontal -->
+          <% if (_featured.length > 0) { %>
+          <div class="news-featured-list">
+            <% _featured.forEach(function(p) { %>
+            <article class="news-card--featured">
+              <% if (p.coverImage) { %>
+              <a href="/noutati/<%= p.slug %>" class="news-featured-image-wrap">
+                <img src="<%= p.coverImage %>" alt="<%= p.title %>" class="news-featured-image" loading="lazy" />
+              </a>
+              <% } else { %>
+              <div class="news-featured-image-wrap news-featured-image-wrap--empty"></div>
+              <% } %>
+              <div class="news-featured-body">
+                <div class="news-card-meta">
+                  <span class="news-card-featured">★ Promovat</span>
+                  <span class="news-card-category"><%= p.category %></span>
+                  <span class="news-card-date"><%= new Date(p.publishDate).toLocaleDateString('ro-RO', { day:'numeric', month:'long', year:'numeric' }) %></span>
+                </div>
+                <h2 class="news-featured-title">
+                  <a href="/noutati/<%= p.slug %>"><%= p.title %></a>
+                </h2>
+                <p class="news-featured-excerpt"><%= p.excerpt %></p>
+                <a href="/noutati/<%= p.slug %>" class="btn btn-outline btn--sm">Citește articolul →</a>
+              </div>
+            </article>
+            <% }); %>
+          </div>
+          <% } %>
+
+          <!-- Regular grid -->
+          <% if (_nonFeatured.length > 0) { %>
+          <div class="news-grid<%= _featured.length > 0 ? ' news-grid--below-featured' : '' %>">
+            <% _nonFeatured.forEach(function(p) { %>
+            <article class="news-card">
+              <% if (p.coverImage) { %>
+              <a href="/noutati/<%= p.slug %>" class="news-card-image-wrap">
+                <img src="<%= p.coverImage %>" alt="<%= p.title %>" class="news-card-image" loading="lazy" />
+              </a>
+              <% } %>
+              <div class="news-card-body">
+                <div class="news-card-meta">
+                  <span class="news-card-category"><%= p.category %></span>
+                  <span class="news-card-date"><%= new Date(p.publishDate).toLocaleDateString('ro-RO', { day:'numeric', month:'long', year:'numeric' }) %></span>
+                </div>
+                <h2 class="news-card-title">
+                  <a href="/noutati/<%= p.slug %>"><%= p.title %></a>
+                </h2>
+                <p class="news-card-excerpt"><%= p.excerpt %></p>
+                <a href="/noutati/<%= p.slug %>" class="news-card-cta">Citește mai mult →</a>
+              </div>
+            </article>
+            <% }); %>
+          </div>
+          <% } %>
+
+          <% } %>
+        </div>
+      </section>
+    </main>
+
+    <%- include('partials/footer') %>
+    <div id="toast" class="toast" aria-live="polite"></div>
+    <script src="/js/main.js"></script>
+  </body>
+</html>

@@ -1,3 +1,18 @@
+<%
+  /* Use activeCourses injected by res.locals middleware */
+  const _ac = typeof activeCourses !== 'undefined' ? activeCourses : [];
+  const _kids   = _ac.filter(c => c.audience === 'copii');
+  const _adults = _ac.filter(c => c.audience === 'adulti');
+
+  /* Short description: first non-empty line of intro, capped at 140 chars */
+  function shortDesc(intro) {
+    if (!intro) return '';
+    const first = intro.split('\n').find(l => l.trim().length > 0) || '';
+    return first.length > 140 ? first.substring(0, 137) + '…' : first;
+  }
+%>
+
+<% if (_ac.length > 0) { %>
 <section id="courses" class="section">
   <div class="container">
 
@@ -9,6 +24,7 @@
     </div>
 
     <!-- ── Banda copii ── -->
+    <% if (_kids.length > 0) { %>
     <div class="courses-band">
       <div class="courses-band-header courses-band-header--kids">
         <svg class="courses-band-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -18,39 +34,26 @@
         <span class="courses-band-label">Pentru copii</span>
         <span class="courses-band-age">Vârste 6–17 ani</span>
       </div>
-
-      <a href="/cursuri/copii/engleza" class="course-row">
-        <span class="course-num">01</span>
+      <% _kids.forEach(function(c, i) { %>
+      <a href="/cursuri/copii/<%= c.slug %>" class="course-row">
+        <span class="course-num"><%= String(i + 1).padStart(2, '0') %></span>
         <div class="course-body">
-          <div class="course-name">Engleză pentru Copii</div>
-          <p class="course-desc">Vocabular, fluență, conversație și pregătire examene Cambridge prin sesiuni dinamice adaptate vârstei.</p>
-          <div><span class="course-tag course-tag-en">Vârste 6–17 ani</span></div>
+          <div class="course-name"><%= c.title %></div>
+          <p class="course-desc"><%= shortDesc(c.intro) %></p>
+          <div>
+            <span class="course-tag" style="color:<%= c.accentColor %>;border-color:<%= c.accentBorder %>">
+              <%= c.tagLabel %>
+            </span>
+          </div>
         </div>
         <span class="course-arrow" aria-hidden="true">→</span>
       </a>
-
-      <a href="/cursuri/copii/leadership" class="course-row">
-        <span class="course-num">02</span>
-        <div class="course-body">
-          <div class="course-name">Leadership pentru Copii</div>
-          <p class="course-desc">Vorbire în public, lucru în echipă și rezolvarea de probleme prin proiecte și activități ghidate.</p>
-          <div><span class="course-tag course-tag-lead">Vârste 8–17 ani</span></div>
-        </div>
-        <span class="course-arrow" aria-hidden="true">→</span>
-      </a>
-
-      <a href="/cursuri/copii/it" class="course-row">
-        <span class="course-num">03</span>
-        <div class="course-body">
-          <div class="course-name">IT & Programare pentru Copii</div>
-          <p class="course-desc">Scratch, Python, robotică și educație digitală prin lecții practice care fac tehnologia creativă.</p>
-          <div><span class="course-tag course-tag-it">Vârste 7–17 ani</span></div>
-        </div>
-        <span class="course-arrow" aria-hidden="true">→</span>
-      </a>
+      <% }); %>
     </div>
+    <% } %>
 
     <!-- ── Banda adulți ── -->
+    <% if (_adults.length > 0) { %>
     <div class="courses-band">
       <div class="courses-band-header courses-band-header--adults">
         <svg class="courses-band-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -62,37 +65,24 @@
         <span class="courses-band-label">Pentru adulți</span>
         <span class="courses-band-age">18+ ani</span>
       </div>
-
-      <a href="/cursuri/adulti/engleza" class="course-row">
-        <span class="course-num">01</span>
+      <% _adults.forEach(function(c, i) { %>
+      <a href="/cursuri/adulti/<%= c.slug %>" class="course-row">
+        <span class="course-num"><%= String(i + 1).padStart(2, '0') %></span>
         <div class="course-body">
-          <div class="course-name">Engleză pentru Adulți</div>
-          <p class="course-desc">Business English, IELTS, TOEFL și conversație fluentă — engleză care deschide uși.</p>
-          <div><span class="course-tag course-tag-en">18+ ani</span></div>
+          <div class="course-name"><%= c.title %></div>
+          <p class="course-desc"><%= shortDesc(c.intro) %></p>
+          <div>
+            <span class="course-tag" style="color:<%= c.accentColor %>;border-color:<%= c.accentBorder %>">
+              <%= c.tagLabel %>
+            </span>
+          </div>
         </div>
         <span class="course-arrow" aria-hidden="true">→</span>
       </a>
-
-      <a href="/cursuri/adulti/leadership" class="course-row">
-        <span class="course-num">02</span>
-        <div class="course-body">
-          <div class="course-name">Leadership pentru Adulți</div>
-          <p class="course-desc">Prezentări, negociere, managementul echipei și comunicare profesională cu impact real.</p>
-          <div><span class="course-tag course-tag-lead">18+ ani</span></div>
-        </div>
-        <span class="course-arrow" aria-hidden="true">→</span>
-      </a>
-
-      <a href="/cursuri/adulti/it" class="course-row">
-        <span class="course-num">03</span>
-        <div class="course-body">
-          <div class="course-name">IT & Digital pentru Adulți</div>
-          <p class="course-desc">Python, automatizare, instrumente AI și productivitate digitală — fără a fi programator.</p>
-          <div><span class="course-tag course-tag-it">18+ ani</span></div>
-        </div>
-        <span class="course-arrow" aria-hidden="true">→</span>
-      </a>
+      <% }); %>
     </div>
+    <% } %>
 
   </div>
 </section>
+<% } %>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ro">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= pageTitle %></title>
+    <meta name="description" content="<%= metaDescription %>" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+
+    <%- include('partials/header') %>
+
+    <main>
+
+      <!-- Post hero — narrow centred column -->
+      <section class="post-hero">
+        <div class="post-narrow">
+          <a href="/noutati" class="back-link">← Înapoi la noutăți</a>
+          <div class="post-hero-meta">
+            <span class="news-card-category"><%= post.category %></span>
+            <span class="news-card-date"><%= new Date(post.publishDate).toLocaleDateString('ro-RO', { day:'numeric', month:'long', year:'numeric' }) %></span>
+          </div>
+          <h1 class="post-title"><%= post.title %></h1>
+          <% if (post.excerpt) { %>
+          <p class="post-excerpt"><%= post.excerpt %></p>
+          <% } %>
+        </div>
+      </section>
+
+      <!-- Divider -->
+      <div class="post-rule"></div>
+
+      <!-- Cover image — full container width, click to fullscreen -->
+      <% if (post.coverImage) { %>
+      <div class="post-cover">
+        <div class="post-narrow">
+          <button class="post-cover-btn" onclick="openLightbox(this)" aria-label="Deschide imaginea">
+            <img src="<%= post.coverImage %>" alt="<%= post.title %>" class="post-cover-img" />
+            <span class="post-cover-zoom">&#x2B0C; Mărește</span>
+          </button>
+        </div>
+      </div>
+
+      <% } %>
+
+      <!-- Post body — narrow centred column -->
+      <section class="section section--no-top">
+        <div class="post-narrow">
+          <div class="post-body">
+            <%- post.content %>
+          </div>
+          <div class="post-footer">
+            <a href="/noutati" class="back-link">← Toate noutățile</a>
+            <a href="/#contact" class="btn btn-primary">Înscrie-te la un curs</a>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Lightbox overlay -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()" role="dialog" aria-modal="true" aria-label="Imagine mărită">
+      <button class="lightbox-close" onclick="closeLightbox()" aria-label="Închide">&#x2715;</button>
+      <img id="lightbox-img" src="" alt="" class="lightbox-img" onclick="event.stopPropagation()" />
+    </div>
+
+    <%- include('partials/footer') %>
+    <div id="toast" class="toast" aria-live="polite"></div>
+    <script src="/js/main.js"></script>
+    <script>
+      function openLightbox(btn) {
+        const img = btn.querySelector('img');
+        document.getElementById('lightbox-img').src = img.src;
+        document.getElementById('lightbox-img').alt = img.alt;
+        document.getElementById('lightbox').classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('is-open');
+        document.body.style.overflow = '';
+      }
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeLightbox();
+      });
+    </script>
+  </body>
+</html>

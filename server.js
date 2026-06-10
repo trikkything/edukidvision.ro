@@ -4,6 +4,7 @@ const path       = require('path');
 const fs         = require('fs');
 const nodemailer = require('nodemailer');
 const session    = require('express-session');
+const multer     = require('multer');
 
 const app  = express();
 const port = process.env.PORT || 3002;
@@ -40,6 +41,35 @@ function loadCourses() {
 function saveCourses(list) {
   fs.writeFileSync(COURSES_FILE, JSON.stringify(list, null, 2));
 }
+
+/* ─── Posts data helpers ──────────────────────────────────────────────── */
+const POSTS_FILE = path.join(__dirname, 'data', 'posts.json');
+
+function loadPosts() {
+  if (!fs.existsSync(POSTS_FILE)) return [];
+  return JSON.parse(fs.readFileSync(POSTS_FILE, 'utf8'));
+}
+
+function savePosts(list) {
+  fs.writeFileSync(POSTS_FILE, JSON.stringify(list, null, 2));
+}
+
+/* ─── Multer — cover image uploads ───────────────────────────────────── */
+const postImgStorage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, path.join(__dirname, 'public', 'images', 'posts')),
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    cb(null, `post-${Date.now()}${ext}`);
+  },
+});
+const uploadPostImg = multer({
+  storage: postImgStorage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (/image\/(jpeg|png|webp|gif)/.test(file.mimetype)) cb(null, true);
+    else cb(new Error('Doar imagini JPEG, PNG, WebP sau GIF.'));
+  },
+});
 
 /* ─── Admin auth middleware ───────────────────────────────────────────── */
 function requireAdmin(req, res, next) {
@@ -287,9 +317,38 @@ const _courses_placeholder = {
 };
 
 app.get('/', (req, res) => {
+  const activePosts  = loadPosts()
+    .filter(p => p.active)
+    .sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
+  const featured     = activePosts.filter(p => p.featured);
+  const nonFeatured  = activePosts.filter(p => !p.featured);
+  const latestPosts  = [...featured, ...nonFeatured].slice(0, 6);
   res.render('index', {
     pageTitle: 'Edukid Vision | Cursuri de Engleză, Leadership și IT pentru copii și adulți',
     metaDescription: 'Edukid Vision oferă cursuri de Engleză, Leadership și IT pentru copii și adulți, în grupe mici, cu profesori dedicați și sprijin real pentru familii.',
+    latestPosts,
+  });
+});
+
+/* ─── Public news routes ──────────────────────────────────────────────── */
+app.get('/noutati', (req, res) => {
+  const posts = loadPosts()
+    .filter(p => p.active)
+    .sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
+  res.render('noutati', {
+    pageTitle: 'Noutăți | EduKid Vision',
+    metaDescription: 'Ultimele noutăți, anunțuri și articole de la EduKid Vision.',
+    posts,
+  });
+});
+
+app.get('/noutati/:slug', (req, res) => {
+  const post = loadPosts().find(p => p.slug === req.params.slug && p.active);
+  if (!post) return res.status(404).send('Articolul nu a fost găsit.');
+  res.render('post', {
+    pageTitle: post.title + ' | EduKid Vision',
+    metaDescription: post.excerpt,
+    post,
   });
 });
 
@@ -383,6 +442,94 @@ app.post('/admin/courses/:id/toggle', requireAdmin, (req, res) => {
   course.active = !course.active;
   saveCourses(courses);
   res.json({ active: course.active });
+});
+
+/* ─── Admin posts routes ──────────────────────────────────────────────── */
+app.get('/admin/posts', requireAdmin, (req, res) => {
+  const posts = loadPosts().sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
+  res.render('admin/posts', { posts });
+});
+
+app.get('/admin/posts/new', requireAdmin, (req, res) => {
+  res.render('admin/post-form', { post: null, error: null });
+});
+
+app.post('/admin/posts/upload-image', requireAdmin, (req, res) => {
+  uploadPostImg.single('image')(req, res, err => {
+    if (err) return res.status(400).json({ error: err.message });
+    if (!req.file) return res.status(400).json({ error: 'Niciun fișier primit.' });
+    res.json({ url: `/images/posts/${req.file.filename}` });
+  });
+});
+
+app.post('/admin/posts', requireAdmin, (req, res) => {
+  try {
+    const posts = loadPosts();
+    const { title, slug, excerpt, content, category, coverImage, publishDate } = req.body;
+    const featured = req.body.featured === '1';
+    if (!title || !slug) return res.render('admin/post-form', { post: null, error: 'Titlul și slug-ul sunt obligatorii.' });
+    if (posts.find(p => p.id === slug)) return res.render('admin/post-form', { post: null, error: `Un articol cu slug-ul "${slug}" există deja.` });
+    if (featured && posts.filter(p => p.featured).length >= 3) {
+      return res.render('admin/post-form', { post: null, error: 'Sunt deja 3 articole promovate. Dezactivează unul înainte de a adăuga altul.' });
+    }
+    posts.push({ id: slug, slug, title, excerpt: excerpt || '', content: content || '', category: category || 'Noutăți', coverImage: coverImage || '', publishDate: publishDate || new Date().toISOString().split('T')[0], active: true, featured });
+    savePosts(posts);
+    res.redirect('/admin/posts');
+  } catch (e) {
+    res.render('admin/post-form', { post: null, error: 'Eroare: ' + e.message });
+  }
+});
+
+app.get('/admin/posts/:id/edit', requireAdmin, (req, res) => {
+  const post = loadPosts().find(p => p.id === req.params.id);
+  if (!post) return res.status(404).send('Articolul nu a fost găsit.');
+  res.render('admin/post-form', { post, error: null });
+});
+
+app.post('/admin/posts/:id', requireAdmin, (req, res) => {
+  try {
+    const posts = loadPosts();
+    const idx = posts.findIndex(p => p.id === req.params.id);
+    if (idx === -1) return res.status(404).send('Articolul nu a fost găsit.');
+    const { title, excerpt, content, category, coverImage, publishDate } = req.body;
+    const featured = req.body.featured === '1';
+    if (featured && !posts[idx].featured && posts.filter(p => p.featured).length >= 3) {
+      return res.render('admin/post-form', { post: posts[idx], error: 'Sunt deja 3 articole promovate. Dezactivează unul înainte de a promova altul.' });
+    }
+    posts[idx] = { ...posts[idx], title, excerpt: excerpt || '', content: content || '', category: category || 'Noutăți', coverImage: coverImage || '', publishDate: publishDate || posts[idx].publishDate, featured };
+    savePosts(posts);
+    res.redirect('/admin/posts');
+  } catch (e) {
+    const post = loadPosts().find(p => p.id === req.params.id);
+    res.render('admin/post-form', { post, error: 'Eroare: ' + e.message });
+  }
+});
+
+app.post('/admin/posts/:id/toggle', requireAdmin, (req, res) => {
+  const posts = loadPosts();
+  const post = posts.find(p => p.id === req.params.id);
+  if (!post) return res.status(404).json({ error: 'Not found' });
+  post.active = !post.active;
+  savePosts(posts);
+  res.json({ active: post.active });
+});
+
+app.post('/admin/posts/:id/feature', requireAdmin, (req, res) => {
+  const posts = loadPosts();
+  const post = posts.find(p => p.id === req.params.id);
+  if (!post) return res.status(404).json({ error: 'Not found' });
+  if (!post.featured && posts.filter(p => p.featured).length >= 3) {
+    return res.status(400).json({ error: 'Limita de 3 articole promovate a fost atinsă.' });
+  }
+  post.featured = !post.featured;
+  savePosts(posts);
+  res.json({ featured: post.featured, featuredCount: posts.filter(p => p.featured).length });
+});
+
+app.post('/admin/posts/:id/delete', requireAdmin, (req, res) => {
+  const posts = loadPosts().filter(p => p.id !== req.params.id);
+  savePosts(posts);
+  res.redirect('/admin/posts');
 });
 
 /* ─── Contact form POST ───────────────────────────────────────────────── */

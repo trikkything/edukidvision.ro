@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= post ? 'Editează articol' : 'Articol nou' %> — EduKid Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/admin.css" />
+  <!-- Quill rich text editor -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.snow.min.css" rel="stylesheet" />
+  <style>
+    .ql-container { font-family: var(--ff); font-size: 0.95rem; min-height: 280px; }
+    .ql-toolbar { border-color: var(--border) !important; background: var(--bg); }
+    .ql-container.ql-snow { border-color: var(--border) !important; }
+    .ql-container.ql-snow:focus-within { border-color: var(--teal) !important; }
+    .cover-preview { max-width: 100%; max-height: 200px; object-fit: cover; border: 1px solid var(--border); margin-top: 0.5rem; display: none; }
+    .cover-preview.is-visible { display: block; }
+    .cover-tabs { display: flex; gap: 0; margin-bottom: 0.75rem; }
+    .cover-tab { padding: 0.4rem 0.9rem; font-size: 0.78rem; font-weight: 600; border: 1px solid var(--border); background: var(--bg); color: var(--ink-muted); cursor: pointer; }
+    .cover-tab:first-child { border-right: none; }
+    .cover-tab.is-active { background: var(--white); color: var(--ink); border-bottom-color: var(--white); }
+    .cover-tab-panel { display: none; }
+    .cover-tab-panel.is-active { display: block; }
+    .upload-btn-wrap { display: flex; gap: 0.5rem; align-items: center; }
+    .upload-status { font-size: 0.78rem; color: var(--ink-faint); }
+  </style>
+</head>
+<body class="admin-page">
+
+  <aside class="admin-sidebar">
+    <a href="/admin" class="admin-brand">
+      <img src="/images/logo-mark-400.png" alt="" class="admin-brand-logo" />
+      <div>
+        <div class="admin-brand-name"><span style="color:#7CBB6A">EduKid</span><span style="color:#009B9E"> Vision</span></div>
+        <div class="admin-brand-sub">Admin</div>
+      </div>
+    </a>
+    <nav class="admin-nav">
+      <a href="/admin" class="admin-nav-link">Cursuri</a>
+      <a href="/admin/posts" class="admin-nav-link is-active">Articole</a>
+      <a href="/" class="admin-nav-link" target="_blank">Vezi site ↗</a>
+    </nav>
+    <form method="POST" action="/admin/logout" class="admin-logout">
+      <button type="submit" class="admin-nav-link admin-nav-link--logout">Ieșire</button>
+    </form>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <div>
+        <a href="/admin/posts" class="admin-back">← Înapoi la articole</a>
+        <h1 class="admin-page-title"><%= post ? 'Editează: ' + post.title : 'Articol nou' %></h1>
+      </div>
+    </div>
+
+    <% if (error) { %><p class="admin-form-error"><%= error %></p><% } %>
+
+    <form id="postForm" method="POST"
+          action="<%= post ? '/admin/posts/' + post.id : '/admin/posts' %>"
+          class="admin-form">
+
+      <input type="hidden" name="content" id="f-content" value="<%= post ? post.content.replace(/"/g, '&quot;') : '' %>" />
+
+      <!-- Basic info -->
+      <div class="admin-form-section">
+        <div class="admin-form-section-header">
+          <h2 class="admin-form-section-title">Informații de bază</h2>
+        </div>
+        <div class="admin-form-grid">
+          <label class="admin-label" style="grid-column:1/-1">
+            Titlu articol
+            <input type="text" name="title" id="f-title" placeholder="ex: EduKid Vision deschide un nou centru" value="<%= post ? post.title : '' %>" required />
+          </label>
+
+          <% if (!post) { %>
+          <label class="admin-label" style="grid-column:1/-1">
+            Slug (URL)
+            <input type="text" name="slug" id="f-slug" placeholder="ex: inaugurare-centru-2026" value="" />
+            <span class="admin-hint">Generat automat din titlu. Folosit în: /noutati/<strong>slug</strong></span>
+          </label>
+          <% } %>
+
+          <label class="admin-label">
+            Categorie
+            <select name="category" id="f-category">
+              <% const cats = ['Noutăți', 'Evenimente', 'Sfaturi părinți', 'Educație', 'Anunțuri']; %>
+              <% cats.forEach(c => { %>
+              <option value="<%= c %>" <%= (post && post.category === c) ? 'selected' : '' %>><%= c %></option>
+              <% }); %>
+            </select>
+          </label>
+
+          <label class="admin-label">
+            Data publicării
+            <input type="date" name="publishDate" id="f-date" value="<%= post ? post.publishDate : new Date().toISOString().split('T')[0] %>" />
+          </label>
+
+          <label class="admin-label" style="grid-column:1/-1">
+            Rezumat (excerpt)
+            <textarea name="excerpt" id="f-excerpt" rows="2" placeholder="Scurtă descriere afișată pe card și în meta description..."><%= post ? post.excerpt : '' %></textarea>
+          </label>
+
+          <label class="admin-label" style="grid-column:1/-1">
+            <div style="display:flex;align-items:center;gap:0.65rem;cursor:pointer">
+              <input type="hidden" name="featured" value="0" />
+              <input type="checkbox" name="featured" id="f-featured" value="1" style="width:16px;height:16px;cursor:pointer;accent-color:var(--teal)" <%= (post && post.featured) ? 'checked' : '' %> />
+              <span style="font-size:0.82rem;font-weight:600;color:var(--ink);text-transform:none;letter-spacing:0">
+                ★ Promovează pe prima pagină
+              </span>
+            </div>
+            <span class="admin-hint" style="margin-top:0.25rem">Articolele promovate apar primele în secțiunea de noutăți. Maxim 3 simultan.</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Cover image -->
+      <div class="admin-form-section">
+        <div class="admin-form-section-header">
+          <h2 class="admin-form-section-title">Imagine de copertă</h2>
+        </div>
+        <div style="padding:1.25rem">
+          <div class="cover-tabs">
+            <button type="button" class="cover-tab is-active" onclick="switchCoverTab('upload', this)">Încarcă fișier</button>
+            <button type="button" class="cover-tab" onclick="switchCoverTab('url', this)">URL extern</button>
+          </div>
+
+          <div id="cover-panel-upload" class="cover-tab-panel is-active">
+            <div class="upload-btn-wrap">
+              <input type="file" id="f-image-file" accept="image/jpeg,image/png,image/webp" style="display:none" />
+              <button type="button" class="admin-btn admin-btn--sm" onclick="document.getElementById('f-image-file').click()">Alege imagine</button>
+              <span class="upload-status" id="upload-status">Niciun fișier ales</span>
+            </div>
+          </div>
+
+          <div id="cover-panel-url" class="cover-tab-panel">
+            <input type="text" id="f-image-url" placeholder="https://example.com/imagine.jpg" style="width:100%" value="" />
+            <button type="button" class="admin-btn admin-btn--sm" style="margin-top:0.5rem" onclick="applyImageUrl()">Aplică URL</button>
+          </div>
+
+          <input type="hidden" name="coverImage" id="f-coverImage" value="<%= post ? post.coverImage : '' %>" />
+          <% if (post && post.coverImage) { %>
+          <img src="<%= post.coverImage %>" alt="" class="cover-preview is-visible" id="cover-preview" />
+          <% } else { %>
+          <img src="" alt="" class="cover-preview" id="cover-preview" />
+          <% } %>
+        </div>
+      </div>
+
+      <!-- Content (Quill) -->
+      <div class="admin-form-section">
+        <div class="admin-form-section-header">
+          <h2 class="admin-form-section-title">Conținut articol</h2>
+        </div>
+        <div style="padding:0">
+          <div id="quill-editor"></div>
+        </div>
+      </div>
+
+      <div class="admin-form-actions">
+        <a href="/admin/posts" class="admin-btn">Anulează</a>
+        <button type="submit" class="admin-btn admin-btn--primary">Salvează articolul</button>
+      </div>
+    </form>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js"></script>
+  <script>
+    /* ── Quill setup ── */
+    const quill = new Quill('#quill-editor', {
+      theme: 'snow',
+      placeholder: 'Scrie conținutul articolului...',
+      modules: {
+        toolbar: [
+          [{ header: [2, 3, false] }],
+          ['bold', 'italic', 'underline'],
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          ['link', 'blockquote'],
+          ['clean'],
+        ],
+      },
+    });
+
+    /* Populate editor with existing content */
+    const existingContent = document.getElementById('f-content').value;
+    if (existingContent) quill.root.innerHTML = existingContent;
+
+    /* Auto-generate slug from title (new posts only) */
+    const titleInput = document.getElementById('f-title');
+    const slugInput  = document.getElementById('f-slug');
+    if (titleInput && slugInput) {
+      titleInput.addEventListener('input', () => {
+        slugInput.value = titleInput.value
+          .toLowerCase()
+          .normalize('NFD').replace(/[̀-ͯ]/g, '')
+          .replace(/[^a-z0-9\s-]/g, '')
+          .trim()
+          .replace(/\s+/g, '-');
+      });
+    }
+
+    /* ── Cover image tabs ── */
+    function switchCoverTab(tab, btn) {
+      document.querySelectorAll('.cover-tab').forEach(t => t.classList.remove('is-active'));
+      document.querySelectorAll('.cover-tab-panel').forEach(p => p.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      document.getElementById('cover-panel-' + tab).classList.add('is-active');
+    }
+
+    /* Upload from file */
+    document.getElementById('f-image-file').addEventListener('change', async function() {
+      if (!this.files[0]) return;
+      const statusEl = document.getElementById('upload-status');
+      statusEl.textContent = 'Încărcare...';
+      const fd = new FormData();
+      fd.append('image', this.files[0]);
+      try {
+        const r = await fetch('/admin/posts/upload-image', { method: 'POST', body: fd });
+        const data = await r.json();
+        if (data.error) { statusEl.textContent = 'Eroare: ' + data.error; return; }
+        document.getElementById('f-coverImage').value = data.url;
+        const prev = document.getElementById('cover-preview');
+        prev.src = data.url;
+        prev.classList.add('is-visible');
+        statusEl.textContent = 'Imagine încărcată ✓';
+      } catch(e) {
+        statusEl.textContent = 'Eroare la încărcare.';
+      }
+    });
+
+    /* Apply external URL */
+    function applyImageUrl() {
+      const url = document.getElementById('f-image-url').value.trim();
+      if (!url) return;
+      document.getElementById('f-coverImage').value = url;
+      const prev = document.getElementById('cover-preview');
+      prev.src = url;
+      prev.classList.add('is-visible');
+    }
+
+    /* Serialize Quill HTML before submit */
+    document.getElementById('postForm').addEventListener('submit', () => {
+      document.getElementById('f-content').value = quill.root.innerHTML;
+    });
+  </script>
+</body>
+</html>
