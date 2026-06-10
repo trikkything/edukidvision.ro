@@ -9,25 +9,29 @@
     "accentDim": "rgba(254,175,74,0.10)",
     "accentBorder": "rgba(254,175,74,0.45)",
     "title": "Engleză pentru Copii",
-    "pageTitle": "Engleză pentru Copii | EduKid Vision",
-    "metaDescription": "Cursuri de engleză pentru copii 6–17 ani. Vocabular, conversație, pronunție și pregătire examene Cambridge în grupe mici.",
-    "intro": "Când copiii se simt în siguranță și se distrează, limbile vin natural. Cursurile noastre de engleză pentru copii sunt construite în jurul jocului, poveștilor și proiectelor creative — nu al manualului. Adaptăm fiecare lecție la vârstă și la ritmul fiecăruia.",
+    "pageTitle": "Cursuri engleza copii| Engleză pentru Copii | EduKid Vision",
+    "metaDescription": "Cursuri de engleză pentru copii 1–18 ani",
+    "intro": "Cursuri de limba engleza pentru copii intre 1-18 ani. \n\nDe la primele cuvinte la certificări internaționale!\n\nÎmpreună, aceste programe creează un parcurs educațional complet, care îi însoțește pe copii și adolescenți de la primele contacte cu limba engleză până la niveluri avansate de comunicare și certificare internațională. În fiecare etapă, copilul rămâne în centrul procesului de învățare, într-un mediu bazat pe conectare, bunăstare și dezvoltare personală.",
     "forWhom": [
       {
-        "group": "Copii 6–10 ani",
-        "desc": "Primele cuvinte, pronunție corectă și dragoste pentru limbă. Învățăm prin cântece, jocuri și povești ilustrate."
+        "group": "Early Years (1-3 ani)",
+        "desc": "Conceput pentru cei mai mici cursanți, acest program dezvoltă bazele limbii engleze într-un mod natural și afectiv, fără traducere.. Copiii învață prin cântece, povești, jocuri senzoriale și activități interactive care le stimulează comunicarea, încrederea și dezvoltarea socio-emoțională. \n\nAccentul este pus pe starea de bine, autonomie și pregătirea pentru experiențele viitoare de învățare. Cursul este dedicat copiilor însoțiți de un părinte pentru că orice va face părintele cu entuziasm, va face și copilul."
       },
       {
-        "group": "Copii 11–14 ani",
-        "desc": "Gramatică solidă, conversație structurată și pregătire pentru Cambridge Young Learners (A1–B1)."
+        "group": "Preschool Years (3-6 ani) Pre-A1",
+        "desc": "O lume a poveștilor, imaginației și descoperirii\nPrin aventurile personajelor acestor cursuri, copiii descoperă limba engleză într-un univers plin de povești, cântece și jocuri creative, fără traducere. Programul dezvoltă vocabularul, abilitățile de comunicare și primele competențe de citire și scriere, în timp ce cultivă creativitatea, curiozitatea și valorile esențiale pentru dezvoltarea armonioasă a copilului. Încă de  la primele lecții, copiii descoperă formatul examenelor internaționale, într-o manieră jucăușă."
       },
       {
-        "group": "Adolescenți 15–17 ani",
-        "desc": "Engleză academică, pregătire Cambridge B1/B2, prezentări, debate și scriere avansată."
+        "group": "Junior Years  (6-12 ani) Pre-A1 - B1",
+        "desc": "Engleză pentru comunicare, încredere și succes școlar.\nAceastă serie îi ajută pe copii să își dezvolte toate competențele lingvistice – ascultare, vorbire, citire și scriere – într-un mod dinamic și relevant pentru lumea lor. Lecțiile interactive, proiectele și activitățile colaborative îi încurajează să gândească critic, să lucreze în echipă și să folosească limba engleză cu încredere în situații reale. Fiecare curs integrează elemente specifice examenelor internaționale, oferind o bază solidă pentru obținerea cu succes a certificatelor."
       },
       {
-        "group": "Pregătire examene",
-        "desc": "Sesiuni dedicate Cambridge KET, PET, FCE și bacalaureat cu simulări și feedback detaliat."
+        "group": "Teen Years  (12-18 ani) A2 - C2",
+        "desc": "Engleză pentru viitorul unei generații globale\nDestinat adolescenților, programul dezvoltă competențe academice și de comunicare avansate, pregătind cursanții pentru examene internaționale și pentru provocările unei lumi conectate global. Temele actuale, proiectele și activitățile de reflecție susțin dezvoltarea gândirii critice, a autonomiei și a încrederii în exprimarea în limba engleză."
+      },
+      {
+        "group": "",
+        "desc": ""
       }
     ],
     "curriculum": [
@@ -48,18 +52,8 @@
       },
       {
         "num": "04",
-        "title": "Citire & Scriere Creativă",
-        "desc": "Texte adaptate vârstei, mini-eseuri, scrisori și proiecte de scriere cu feedback constructiv."
-      },
-      {
-        "num": "05",
         "title": "Pregătire Examene Cambridge",
         "desc": "Exerciții tip examen, tehnici de gestionare a timpului și simulări complete cu corectare."
-      },
-      {
-        "num": "06",
-        "title": "Proiect Final de Modul",
-        "desc": "Fiecare modul se încheie cu o prezentare sau un proiect în fața grupei și a părinților."
       }
     ],
     "details": [
@@ -69,39 +63,26 @@
       },
       {
         "label": "Frecvență",
-        "value": "2 lecții / săptămână"
+        "value": "1 lecție / săptămână"
       },
       {
         "label": "Mărime grupă",
-        "value": "Maxim 6 copii"
+        "value": "4-8 copii"
       },
       {
         "label": "Vârste",
-        "value": "6–17 ani"
+        "value": "1–18 ani"
       },
       {
         "label": "Materiale",
         "value": "Incluse în taxă"
       },
       {
-        "label": "Raport progres",
-        "value": "Lunar pentru părinți"
+        "label": "Durata curs",
+        "value": "10 luni"
       }
     ],
-    "testimonials": [
-      {
-        "quote": "Fiica mea a trecut Cambridge A2 Key din prima. Profesoara a știut exact cum să o motiveze.",
-        "author": "Mihaela D., mama Anei, 11 ani"
-      },
-      {
-        "quote": "Fiul meu refuza să vorbească engleză la școală. Acum vrea să vadă filme fără subtitrare.",
-        "author": "Adriana P., mama lui Luca, 9 ani"
-      },
-      {
-        "quote": "Cel mai bun curs pentru copii. Atmosfera e caldă, iar progresul se vede rapid.",
-        "author": "Ionela V., mama Biancăi, 13 ani"
-      }
-    ]
+    "testimonials": []
   },
   {
     "id": "engleza-adulti",
