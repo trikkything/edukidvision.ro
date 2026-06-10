@@ -68,6 +68,8 @@
               <p class="detail-value"><%= d.value %></p>
             </div>
             <% }); %>
+            <%/* Phantom cells to complete the last row so border-top separators span full width */%>
+            <% var _rem = course.details.length % 3; if (_rem > 0) { for (var _f = 0; _f < (3 - _rem); _f++) { %><div class="detail-cell detail-cell--phantom"></div><% }} %>
           </div>
         </div>
       </section>
@@ -98,7 +100,7 @@
           <div class="section-header">
             <div>
               <span class="label course-accent">Curriculum</span>
-              <h2>Ce vei învăța.</h2>
+              <h2>Ce vom învăța.</h2>
             </div>
           </div>
           <div>
@@ -115,7 +117,7 @@
         </div>
       </section>
 
-      <!-- ── Testimonials ── -->
+      <!-- ── Testimonials ──
       <section class="section section--no-top">
         <div class="container">
           <div class="section-header">
@@ -134,7 +136,7 @@
             <% }); %>
           </div>
         </div>
-      </section>
+      </section> -->
 
       <!-- ── CTA ── -->
       <section>

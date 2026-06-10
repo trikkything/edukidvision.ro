@@ -19,15 +19,15 @@
       },
       {
         "group": "Preschool Years (3-6 ani) Pre-A1",
-        "desc": "O lume a poveștilor, imaginației și descoperirii\nPrin aventurile personajelor acestor cursuri, copiii descoperă limba engleză într-un univers plin de povești, cântece și jocuri creative, fără traducere. Programul dezvoltă vocabularul, abilitățile de comunicare și primele competențe de citire și scriere, în timp ce cultivă creativitatea, curiozitatea și valorile esențiale pentru dezvoltarea armonioasă a copilului. Încă de  la primele lecții, copiii descoperă formatul examenelor internaționale, într-o manieră jucăușă."
+        "desc": "O lume a poveștilor, imaginației și descoperirii\n\nPrin aventurile personajelor acestor cursuri, copiii descoperă limba engleză într-un univers plin de povești, cântece și jocuri creative, fără traducere. \n\nProgramul dezvoltă vocabularul, abilitățile de comunicare și primele competențe de citire și scriere, în timp ce cultivă creativitatea, curiozitatea și valorile esențiale pentru dezvoltarea armonioasă a copilului. \n\nÎncă de  la primele lecții, copiii descoperă formatul examenelor internaționale, într-o manieră jucăușă."
       },
       {
         "group": "Junior Years  (6-12 ani) Pre-A1 - B1",
-        "desc": "Engleză pentru comunicare, încredere și succes școlar.\nAceastă serie îi ajută pe copii să își dezvolte toate competențele lingvistice – ascultare, vorbire, citire și scriere – într-un mod dinamic și relevant pentru lumea lor. Lecțiile interactive, proiectele și activitățile colaborative îi încurajează să gândească critic, să lucreze în echipă și să folosească limba engleză cu încredere în situații reale. Fiecare curs integrează elemente specifice examenelor internaționale, oferind o bază solidă pentru obținerea cu succes a certificatelor."
+        "desc": "Engleză pentru comunicare, încredere și succes școlar.\n\nAceastă serie îi ajută pe copii să își dezvolte toate competențele lingvistice – ascultare, vorbire, citire și scriere – într-un mod dinamic și relevant pentru lumea lor. Lecțiile interactive, proiectele și activitățile colaborative îi încurajează să gândească critic, să lucreze în echipă și să folosească limba engleză cu încredere în situații reale. \n\nFiecare curs integrează elemente specifice examenelor internaționale, oferind o bază solidă pentru obținerea cu succes a certificatelor."
       },
       {
         "group": "Teen Years  (12-18 ani) A2 - C2",
-        "desc": "Engleză pentru viitorul unei generații globale\nDestinat adolescenților, programul dezvoltă competențe academice și de comunicare avansate, pregătind cursanții pentru examene internaționale și pentru provocările unei lumi conectate global. Temele actuale, proiectele și activitățile de reflecție susțin dezvoltarea gândirii critice, a autonomiei și a încrederii în exprimarea în limba engleză."
+        "desc": "Engleză pentru viitorul unei generații globale\n\nDestinat adolescenților, programul dezvoltă competențe academice și de comunicare avansate, pregătind cursanții pentru examene internaționale și pentru provocările unei lumi conectate global. \n\nTemele actuale, proiectele și activitățile de reflecție susțin dezvoltarea gândirii critice, a autonomiei și a încrederii în exprimarea în limba engleză."
       },
       {
         "group": "",
@@ -93,84 +93,65 @@
     "accentColor": "#FEAF4A",
     "accentDim": "rgba(254,175,74,0.10)",
     "accentBorder": "rgba(254,175,74,0.45)",
-    "title": "Engleză pentru Adulți",
-    "pageTitle": "Engleză pentru Adulți | EduKid Vision",
-    "metaDescription": "Cursuri de engleză pentru adulți 18+. Business English, IELTS, TOEFL, conversație și gramatică aplicată în grupe mici.",
-    "intro": "Cursurile noastre pentru adulți pornesc de la un singur obiectiv: să vorbești cu încredere, nu doar să știi reguli. Fie că te pregătești pentru IELTS, vrei să avansezi la job sau pur și simplu vrei să călătorești fără dicționar — avem un program construit pentru tine.",
+    "title": "Engleză pentru Adulți -  Program internațional Cambridge (A1–C1)",
+    "pageTitle": "Engleză pentru Adulți | EduKid Vision | Program internațional Cambridge (A1–C1)",
+    "metaDescription": "Cursuri de engleză pentru adulți 18+. Business English, IELTS, TOEFL, conversație și gramatică aplicată în grupe mici.  Program internațional Cambridge (A1–C1)",
+    "intro": "Program internațional Cambridge (A1–C1) - Cursurile noastre pentru adulți pornesc de la un singur obiectiv: să vorbești cu încredere, nu doar să știi reguli. Fie că te pregătești pentru IELTS, vrei să avansezi la job sau pur și simplu vrei să călătorești fără dicționar — avem un program construit pentru tine.",
     "forWhom": [
       {
-        "group": "Începători & Reluare",
-        "desc": "Ai studiat engleză dar ai uitat? Sau nu ai studiat deloc? Redescoperirii limbii într-un spațiu fără presiune."
-      },
-      {
-        "group": "Nivel Mediu & Avansat",
-        "desc": "Rafinarea gramaticii, extinderea vocabularului și fluidizarea conversației pentru uz zilnic și profesional."
-      },
-      {
-        "group": "Business English",
-        "desc": "Comunicare la locul de muncă, emailuri profesionale, prezentări și negociere în limba engleză."
-      },
-      {
-        "group": "Pregătire IELTS / TOEFL",
-        "desc": "Pregătire intensivă cu exerciții tip examen, tehnici specifice și simulări complete."
+        "group": "Pentru adulți (18+)",
+        "desc": "Program internațional Cambridge (A1–C1)"
       }
     ],
     "curriculum": [
       {
         "num": "01",
-        "title": "Gramatică în Context Real",
-        "desc": "Regulile explicate prin situații autentice de viață și muncă — fără teoria izolată din manual."
+        "title": "Ce vei dezvolta?",
+        "desc": "Comunicare fluentă în situații reale\nEngleză pentru mediul profesional\nEngleză pentru călătorii și conversații internaționale\nGramatică și vocabular utilizate în contexte autentice\nAscultare, citire, scriere și vorbire\nÎncredere în utilizarea limbii engleze"
       },
       {
         "num": "02",
-        "title": "Comunicare Profesională",
-        "desc": "Emailuri, rapoarte, prezentări și conversații de business. Engleză care funcționează la birou."
+        "title": "De ce acest curs?",
+        "desc": "Lecții moderne și interactive\nSubiecte relevante pentru viața de zi cu zi\nEvaluare continuă și feedback personalizat\nExerciții și practică online\nProgres monitorizat conform standardelor Cambridge\nRecunoaștere internațională"
       },
       {
         "num": "03",
-        "title": "Conversație & Fluență",
-        "desc": "Sesiuni de conversație liberă pe teme actuale, dezbateri și simulări de interviuri."
-      },
-      {
-        "num": "04",
-        "title": "Scriere Avansată",
-        "desc": "Eseuri argumentative, rapoarte formale și tehnici de scriere academică pentru examene."
-      },
-      {
-        "num": "05",
-        "title": "Pregătire IELTS & TOEFL",
-        "desc": "Exerciții complete pentru cele 4 module (Reading, Writing, Listening, Speaking) cu feedback detaliat."
-      },
-      {
-        "num": "06",
-        "title": "Proiecte Aplicate",
-        "desc": "Prezentări pe teme profesionale, simulări de interviuri și proiecte de comunicare reală."
+        "title": "Cui se adresează?",
+        "desc": "Profesioniștilor\nAntreprenorilor\nStudenților\nPersoanelor care lucrează în medii internaționale"
       }
     ],
     "details": [
       {
-        "label": "Durată lecție",
-        "value": "90 minute"
+        "label": "Durata lectie Modul 1 an",
+        "value": "1h30min - modul 1 an"
       },
       {
-        "label": "Frecvență",
-        "value": "2 lecții / săptămână"
+        "label": "Frecvență Modul 1 an",
+        "value": "1 lecție / săptămână modul 1 an"
       },
       {
-        "label": "Mărime grupă",
-        "value": "Maxim 6 cursanți"
+        "label": "Durata lectie Modul 5 luni",
+        "value": "1h30min - modul 5 luni"
       },
       {
-        "label": "Nivel de start",
-        "value": "Beginner → Advanced"
+        "label": "Frecvență Modul 5 luni an",
+        "value": "2 lecții / săptămână modul 5 luni"
       },
       {
         "label": "Materiale",
-        "value": "Incluse în taxă"
+        "value": "Suport curs disponibil"
       },
       {
         "label": "Format",
-        "value": "Fizic sau online"
+        "value": "Fizic"
+      },
+      {
+        "label": "Nivel",
+        "value": "Beginner -> Advanced"
+      },
+      {
+        "label": "Gupe",
+        "value": "6 - 8 adulți"
       }
     ],
     "testimonials": [
@@ -197,68 +178,41 @@
     "accentColor": "#FE7875",
     "accentDim": "rgba(254,120,117,0.10)",
     "accentBorder": "rgba(254,120,117,0.45)",
-    "title": "Leadership pentru Copii",
-    "pageTitle": "Leadership pentru Copii | EduKid Vision",
+    "title": "Leadership pentru copii - Leader in me",
+    "pageTitle": "Leadership pentru Copii | EduKid Vision |  Leader in me",
     "metaDescription": "Cursuri de leadership pentru copii 8–17 ani. Vorbire în public, lucru în echipă, gândire critică și încredere în sine.",
-    "intro": "Fiecare copil are o voce. Cursurile noastre de leadership creează spații sigure unde copiii descoperă că ideile lor contează, că pot vorbi în fața celorlalți fără frică și că pot conduce prin exemplu. Lucrăm prin jocuri, proiecte și provocări reale — nu din teorie.",
+    "intro": "Descoperă liderul din tine! Un program internațional de dezvoltare personală pentru tineri cu vârste între 10 și 18 ani, predat în limba engleză și bazat pe renumitele 7 Obiceiuri ale Oamenilor Eficace ale lui Stephen R. Covey. Prin activități interactive și experiențe practice, participanții își dezvoltă încrederea în sine, abilitățile de leadership, comunicarea eficientă, empatia, organizarea și spiritul de echipă. Învață să își stabilească obiective clare, să ia decizii mai bune și să construiască relații sănătoase, pregătindu-se pentru succes în școală, carieră și viață. Învață. Aplică. Inspiră. Fii lider!",
     "forWhom": [
       {
-        "group": "Copii 8–11 ani",
-        "desc": "Jocuri de cooperare, roluri de lider în proiecte de grup și vorbire în fața colegilor. Construim curaj pas cu pas."
-      },
-      {
-        "group": "Adolescenți 12–14 ani",
-        "desc": "Dezbateri structurate, proiecte de impact comunitar și tehnici de prezentare în public."
-      },
-      {
-        "group": "Adolescenți 15–17 ani",
-        "desc": "Prezentări TED-style, negociere, gândire strategică și proiecte de antreprenoriat social."
-      },
-      {
-        "group": "Pregătire olimpiade & concursuri",
-        "desc": "Retorică, argumentare și tehnici de discurs pentru competiții școlare și concursuri de dezbateri."
+        "group": "Copii 10–18 ani",
+        "desc": "Predat în limba engleză - Bazat pe cele 7 Obiceiuri ale Oamenilor Eficace – Stephen R. Covey"
       }
     ],
     "curriculum": [
       {
         "num": "01",
-        "title": "Comunicare & Ascultare",
-        "desc": "Copiii învață să asculte activ, să clarifice înainte de a răspunde și să-și exprime ideile clar."
+        "title": "Cele 7 obiceiuri",
+        "desc": "1. Fii proactiv\n2. Începe cu finalul în minte\n3. Pune pe primul loc lucrurile importante\n4. Gândește câștig–câștig\n5. Înțelege mai întâi, apoi fii înțeles\n6. Acționează în sinergie\n7. Ascute fierăstrăul"
       },
       {
         "num": "02",
-        "title": "Vorbire în Public",
-        "desc": "Structura unui discurs, gestionarea emoțiilor, contactul vizual și controlul vocii."
+        "title": "Ce dezvoltă?",
+        "desc": "Încredere în sine\nLeadership și inițiativă\nComunicare eficientă\nEmpatie și relații sănătoase\nOrganizare și stabilirea obiectivelor\nLucru în echipă\nResponsabilitate și autodisciplină"
       },
       {
         "num": "03",
-        "title": "Lucru în Echipă",
-        "desc": "Roluri în grup, rezolvarea conflictelor și luarea deciziilor prin consens."
-      },
-      {
-        "num": "04",
-        "title": "Gândire Critică & Creativă",
-        "desc": "Analiză de situații, argumentare logică și generarea de soluții inovatoare."
-      },
-      {
-        "num": "05",
-        "title": "Proiecte de Impact",
-        "desc": "Fiecare modul se termină cu un proiect real prezentat colegilor și părinților."
-      },
-      {
-        "num": "06",
-        "title": "Feedback & Reflecție",
-        "desc": "Copiii învață să ofere și să primească feedback constructiv cu deschidere."
+        "title": "Beneficii",
+        "desc": "⭐ Mai multă încredere și autonomie\n⭐ Decizii mai bune\n⭐ Relații mai puternice\n⭐ Performanțe școlare îmbunătățite\n⭐ Pregătire pentru viață și carieră"
       }
     ],
     "details": [
       {
         "label": "Durată lecție",
-        "value": "75 minute"
+        "value": "60 minute"
       },
       {
         "label": "Frecvență",
-        "value": "1–2 lecții / săptămână"
+        "value": "1 lecție / săptămână"
       },
       {
         "label": "Mărime grupă",
@@ -266,31 +220,18 @@
       },
       {
         "label": "Vârste",
-        "value": "8–17 ani"
+        "value": "10–18 ani"
       },
       {
         "label": "Materiale",
-        "value": "Incluse în taxă"
+        "value": "Suport de curs disponibil"
       },
       {
-        "label": "Prezentare finală",
-        "value": "La finalul fiecărui modul"
+        "label": "Durata modul",
+        "value": "1 an"
       }
     ],
-    "testimonials": [
-      {
-        "quote": "Fiul meu a vorbit în fața clasei fără să tremure. Înainte nici nu ridica mâna.",
-        "author": "Cristina N., mama lui David, 12 ani"
-      },
-      {
-        "quote": "Fiica mea a câștigat primul loc la dezbaterile școlare după 3 luni de curs.",
-        "author": "Bogdan I., tata Simonei, 15 ani"
-      },
-      {
-        "quote": "Nu credeam că un curs poate schimba atât de mult încrederea unui copil. Sunt impresionată.",
-        "author": "Raluca M., mama lui Andrei, 10 ani"
-      }
-    ]
+    "testimonials": []
   },
   {
     "id": "leadership-adulti",
@@ -405,58 +346,51 @@
     "accentColor": "#7CBB6A",
     "accentDim": "rgba(124,187,106,0.10)",
     "accentBorder": "rgba(124,187,106,0.45)",
-    "title": "IT & Programare pentru Copii",
+    "title": "Informatică pentru copii",
     "pageTitle": "IT și Programare pentru Copii | EduKid Vision",
-    "metaDescription": "Cursuri de programare pentru copii 7–17 ani. Scratch, Python, HTML/CSS, robotică și proiecte digitale creative.",
-    "intro": "Când un copil vede că poate crea un joc, un robot sau un site web, tehnologia devine magie. Cursurile noastre transformă ecranul dintr-un consumator de timp într-un instrument de creație. Predăm programare și robotică prin proiecte reale, fără teorie goală.",
+    "metaDescription": "Cursuri de programare pentru copii 6–10 ani. Scratch, Python, HTML/CSS, robotică și proiecte digitale creative.",
+    "intro": "Cambridge Digital Skills (6–10 ani). Program bazat pe standardele Cambridge International Education, adaptat pentru elevii din România. „Învățăm tehnologia pas cu pas, prin joacă și descoperire!”",
     "forWhom": [
       {
-        "group": "Copii 7–10 ani",
-        "desc": "Scratch și programare vizuală. Creăm jocuri, animații și povești interactive. Zero experiență necesară."
-      },
-      {
-        "group": "Copii 11–14 ani",
-        "desc": "Python fundamentals, HTML/CSS de bază și robotică cu LEGO Mindstorms. Primul site web real."
-      },
-      {
-        "group": "Adolescenți 15–17 ani",
-        "desc": "Python avansat, JavaScript, baze de date, proiecte full-stack și pregătire pentru olimpiade IT."
-      },
-      {
-        "group": "Pregătire olimpiade IT",
-        "desc": "Algoritmi, structuri de date și rezolvare de probleme pentru concursuri naționale."
+        "group": "Copii 6–10 ani",
+        "desc": "Învățăm tehnologia pas cu pas, prin joacă și descoperire!"
       }
     ],
     "curriculum": [
       {
         "num": "01",
-        "title": "Gândire Computațională",
-        "desc": "Algoritmi, logică și rezolvare structurată de probleme — înainte de orice limbaj de programare."
+        "title": "Ce învață copiii?",
+        "desc": "Dezvoltarea competențelor digitale de bază prin activități practice, jocuri și proiecte creative - Cambridge Digital Skills (6–10 ani)"
       },
       {
         "num": "02",
-        "title": "Programare Vizuală (Scratch)",
-        "desc": "Block-based coding pentru a construi primele jocuri, animații și povești interactive."
+        "title": "Utilizarea calculatorului",
+        "desc": "* Pornirea și oprirea corectă\n* Folosirea mouse-ului și tastaturii\n* Organizarea fișierelor și folderelor"
       },
       {
         "num": "03",
-        "title": "Python Fundamentals",
-        "desc": "Variabile, condiții, bucle și funcții. Primele programe reale care fac lucruri utile."
+        "title": "Creativitate digitală",
+        "desc": "* Desene și imagini digitale\n* Crearea de felicitări și postere\n* Mini-proiecte creative"
       },
       {
         "num": "04",
-        "title": "Web: HTML & CSS",
-        "desc": "Structura paginilor web, stilizare și primul site personal publicat online."
+        "title": "Lucrul cu documente",
+        "desc": "* Scriere și formatare text\n* Inserarea imaginilor\n* Realizarea unor prezentări simple"
       },
       {
         "num": "05",
-        "title": "Robotică",
-        "desc": "Programare hardware, senzori și actuatoare. Proiecte cu Arduino sau LEGO Mindstorms."
+        "title": "Internet și siguranță online",
+        "desc": "* Navigare responsabilă\n* Reguli de siguranță pe internet\n* Recunoașterea situațiilor de risc"
       },
       {
         "num": "06",
-        "title": "Proiect Final",
-        "desc": "Fiecare modul se termină cu un proiect complet: joc, aplicație, robot sau site web prezentat public."
+        "title": "Gândire logică și programare",
+        "desc": "* Activități de logică\n* Introducere în Scratch\n* Crearea primelor animații și jocuri"
+      },
+      {
+        "num": "07",
+        "title": "Beneficii pentru copii",
+        "desc": "Încredere în utilizarea tehnologiei\n✅ Dezvoltarea gândirii logice\n✅ Creativitate și imaginație\n✅ Atenție și concentrare\n✅ Comunicare și colaborare\n✅ Pregătire pentru viitorul digital"
       }
     ],
     "details": [
@@ -466,7 +400,7 @@
       },
       {
         "label": "Frecvență",
-        "value": "1–2 lecții / săptămână"
+        "value": "1 lecție / săptămână"
       },
       {
         "label": "Mărime grupă",
@@ -474,31 +408,18 @@
       },
       {
         "label": "Vârste",
-        "value": "7–17 ani"
+        "value": "6–10 ani"
       },
       {
         "label": "Echipament",
         "value": "Furnizat de centru"
       },
       {
-        "label": "Proiect final",
-        "value": "La finalul fiecărui modul"
+        "label": "Durata curs",
+        "value": "1 an"
       }
     ],
-    "testimonials": [
-      {
-        "quote": "Copilul meu a creat primul joc în Scratch și l-a arătat la toți prietenii. Acum creează, nu consumă.",
-        "author": "Laura C., mama lui Alex, 10 ani"
-      },
-      {
-        "quote": "Fiul meu a luat premiul al doilea la concursul de robotică al școlii. Nici nu știa că îi place robotica.",
-        "author": "Vlad B., tata lui Rareș, 13 ani"
-      },
-      {
-        "quote": "A venit acasă și a construit un site în aceeași zi. Nu mai putea fi oprit.",
-        "author": "George S., tatăl lui Matei, 14 ani"
-      }
-    ]
+    "testimonials": []
   },
   {
     "id": "it-adulti",

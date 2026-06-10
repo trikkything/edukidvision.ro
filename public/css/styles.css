@@ -1106,13 +1106,13 @@ textarea { resize: vertical; min-height: 100px; }
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
-  align-items: end;
+  align-items: start;
   padding-bottom: 3.5rem;
   border-bottom: 1px solid var(--border);
 }
 .course-hero h1 { font-size: clamp(2.8rem, 7vw, 5.5rem); }
 .course-hero-right { padding-bottom: 0.5rem; }
-.course-hero-right p { font-size: 0.95rem; max-width: 42ch; margin-bottom: 2rem; }
+.course-hero-right p { font-size: 0.95rem; max-width: 42ch; margin-bottom: 2rem; white-space: pre-wrap; word-break: break-word; }
 
 /* Accent helpers — values injected per-page via :root in course.ejs */
 .course-accent        { color: var(--course-accent); }
@@ -1139,13 +1139,16 @@ textarea { resize: vertical; min-height: 100px; }
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 .detail-cell {
   padding: 1.75rem 1.5rem;
   border-right: 1px solid var(--border);
 }
 .detail-cell:first-child  { padding-left: 0; }
-.detail-cell:last-child   { border-right: none; }
+.detail-cell--phantom     { pointer-events: none; }
+.detail-cell:last-child,
+.detail-cell:nth-child(3n) { border-right: none; }
 .detail-cell:nth-child(n+4) { border-top: 1px solid var(--border); }
 .detail-cell:nth-child(3n+1):nth-child(n+4) { padding-left: 0; }
 .detail-label {
@@ -1168,6 +1171,7 @@ textarea { resize: vertical; min-height: 100px; }
   display: grid;
   grid-template-columns: 1fr 1fr;
   border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 .whom-cell {
   padding: 2rem 2rem 2rem 0;
@@ -1179,6 +1183,7 @@ textarea { resize: vertical; min-height: 100px; }
   padding-right: 0;
   border-right: none;
 }
+.whom-cell:last-child { border-right: none; }
 .whom-cell:nth-child(3),
 .whom-cell:nth-child(4) { border-bottom: none; }
 .whom-group {
@@ -1189,7 +1194,7 @@ textarea { resize: vertical; min-height: 100px; }
   margin-bottom: 0.5rem;
   color: var(--course-accent);
 }
-.whom-desc { font-size: 0.9rem; color: var(--ink-muted); line-height: 1.65; }
+.whom-desc { font-size: 0.9rem; color: var(--ink-muted); line-height: 1.65; white-space: pre-wrap; word-break: break-word; }
 
 /* Curriculum rows */
 .curriculum-row {
@@ -1216,7 +1221,7 @@ textarea { resize: vertical; min-height: 100px; }
   letter-spacing: -0.01em;
   margin-bottom: 0.35rem;
 }
-.curriculum-desc { font-size: 0.9rem; color: var(--ink-muted); line-height: 1.65; }
+.curriculum-desc { font-size: 0.9rem; color: var(--ink-muted); line-height: 1.65; white-space: pre-wrap; word-break: break-word; }
 
 /* Course page testimonials — 3-column */
 .course-testi-grid {
@@ -1247,7 +1252,8 @@ textarea { resize: vertical; min-height: 100px; }
 @media (max-width: 960px) {
   .course-hero-inner     { grid-template-columns: 1fr; gap: 1.5rem; }
   .details-strip         { grid-template-columns: 1fr 1fr; }
-  .detail-cell:nth-child(2n)  { border-right: none; }
+  .detail-cell:nth-child(2n),
+  .detail-cell:last-child     { border-right: none; }
   .detail-cell:nth-child(n+3) { border-top: 1px solid var(--border); }
   .detail-cell:nth-child(3)   { padding-left: 0; }
   .whom-grid             { grid-template-columns: 1fr; }
