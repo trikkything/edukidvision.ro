@@ -12,6 +12,18 @@
       <div class="contact-form-wrap">
         <p style="margin-bottom:1.75rem">Spune-ne câte ceva despre cursant și te ajutăm să alegi cursul potrivit.</p>
 
+        <!-- Thank-you panel — hidden until form submits successfully -->
+        <div id="contactThanks" class="contact-thanks" style="display:none">
+          <div class="contact-thanks-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <h3 class="contact-thanks-title">Mulțumim!</h3>
+          <p class="contact-thanks-text">Mesajul tău a fost trimis cu succes. Echipa noastră îl va analiza și te vom contacta în cel mai scurt timp posibil pentru a stabili detaliile lecției gratuite.</p>
+          <p class="contact-thanks-sub">Ne auzim curând! 👋</p>
+        </div>
+
         <form id="contactForm" class="contact-form">
           <div class="form-row">
             <label>
@@ -37,9 +49,9 @@
             Interes pentru curs
             <select name="course" required>
               <option value="">Selectează un curs</option>
-              <option>Cursuri de Engleză</option>
-              <option>Cursuri de Leadership</option>
-              <option>Cursuri de IT</option>
+              <% (activeCourses || []).forEach(function(course) { %>
+                <option value="<%= course.title %>"><%= course.title %></option>
+              <% }); %>
             </select>
           </label>
           <label>
@@ -54,7 +66,7 @@
         <div>
           <p class="details-label">Vizitează-ne</p>
           <ul class="details-list">
-            <li><strong>Adresă</strong> Str. Vârfu cu dor, nr. 18, Arad</li>
+            <li><strong>Adresă</strong> Str. Vârful cu dor, nr. 18, Arad</li>
             <li><strong>Telefon</strong> +40 745 547 177</li>
             <li><strong>Email</strong> contact@edukidvision.ro</li>
             <li><strong>Program</strong> Luni–Vineri 12:00–19:00 · Sâmbătă, Duminică - închis</li>
@@ -62,12 +74,20 @@
         </div>
         <div>
           <p class="details-label">Locație</p>
-          <div class="map-placeholder">Hartă aici</div>
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2762.9805704930277!2d21.305062276031016!3d46.171042486000744!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4745985590223587%3A0xf59b6cc96a0ac52!2sHelen%20Doron%20English%20Arad!5e0!3m2!1sen!2sro!4v1781183690576!5m2!1sen!2sro"
+            width="300"
+            height="225"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
         </div>
-        <div class="cta-inline">
+        <!-- <div class="cta-inline">
           <h3>Ești gata să începi?</h3>
           <a href="#contact" class="btn btn-primary">Programează o lecție gratuită</a>
-        </div>
+        </div> -->
       </div>
     </div>
 

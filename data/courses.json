@@ -348,11 +348,11 @@
     "accentBorder": "rgba(124,187,106,0.45)",
     "title": "Informatică pentru copii",
     "pageTitle": "IT și Programare pentru Copii | EduKid Vision",
-    "metaDescription": "Cursuri de programare pentru copii 6–10 ani. Scratch, Python, HTML/CSS, robotică și proiecte digitale creative.",
-    "intro": "Cambridge Digital Skills (6–10 ani). Program bazat pe standardele Cambridge International Education, adaptat pentru elevii din România. „Învățăm tehnologia pas cu pas, prin joacă și descoperire!”",
+    "metaDescription": "Cursuri de programare pentru copii 6–16 ani. Scratch, Python, HTML/CSS, robotică și proiecte digitale creative.",
+    "intro": "Cambridge Digital Skills (6–16 ani). Program bazat pe standardele Cambridge International Education, adaptat pentru elevii din România. „Învățăm tehnologia pas cu pas, prin joacă și descoperire!”",
     "forWhom": [
       {
-        "group": "Copii 6–10 ani",
+        "group": "Copii 6–16 ani",
         "desc": "Învățăm tehnologia pas cu pas, prin joacă și descoperire!"
       }
     ],
@@ -360,7 +360,7 @@
       {
         "num": "01",
         "title": "Ce învață copiii?",
-        "desc": "Dezvoltarea competențelor digitale de bază prin activități practice, jocuri și proiecte creative - Cambridge Digital Skills (6–10 ani)"
+        "desc": "Dezvoltarea competențelor digitale de bază prin activități practice, jocuri și proiecte creative - Cambridge Digital Skills (6–16 ani)"
       },
       {
         "num": "02",
@@ -408,7 +408,7 @@
       },
       {
         "label": "Vârste",
-        "value": "6–10 ani"
+        "value": "6–16 ani"
       },
       {
         "label": "Echipament",

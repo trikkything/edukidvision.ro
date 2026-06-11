@@ -42,6 +42,15 @@ function saveCourses(list) {
   fs.writeFileSync(COURSES_FILE, JSON.stringify(list, null, 2));
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 /* ─── Posts data helpers ──────────────────────────────────────────────── */
 const POSTS_FILE = path.join(__dirname, 'data', 'posts.json');
 
@@ -534,34 +543,109 @@ app.post('/admin/posts/:id/delete', requireAdmin, (req, res) => {
 
 /* ─── Contact form POST ───────────────────────────────────────────────── */
 app.post('/contact', async (req, res) => {
-  const { name, email, phone, age, course, message } = req.body;
+  const name = String(req.body.name || '').trim();
+  const email = String(req.body.email || '').trim();
+  const phone = String(req.body.phone || '').trim();
+  const age = String(req.body.age || '').trim();
+  const course = String(req.body.course || '').trim();
+  const message = String(req.body.message || '').trim();
 
   // Basic server-side validation
   if (!name || !email || !phone || !age || !course || !message) {
     return res.status(400).json({ error: 'Toate câmpurile sunt obligatorii.' });
   }
 
+  if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+    console.error('Mail error: GMAIL_USER or GMAIL_APP_PASSWORD is not configured.');
+    return res.status(500).json({ error: 'Emailul nu este configurat.' });
+  }
+
+  const recipient = process.env.CONTACT_RECIPIENT || process.env.GMAIL_USER;
+  const safe = {
+    name: escapeHtml(name),
+    email: escapeHtml(email),
+    phone: escapeHtml(phone),
+    age: escapeHtml(age),
+    course: escapeHtml(course),
+    message: escapeHtml(message).replace(/\n/g, '<br>'),
+  };
+
   const mailOptions = {
     from: `"EduKid Vision" <${process.env.GMAIL_USER}>`,
-    to: process.env.CONTACT_RECIPIENT,
+    to: recipient,
     replyTo: email,
     subject: `Solicitare nouă: ${course} — ${name}`,
     html: `
-      <h2 style="font-family:sans-serif;color:#009B9E">Solicitare nouă de la ${name}</h2>
+      <h2 style="font-family:sans-serif;color:#009B9E">Solicitare nouă de la ${safe.name}</h2>
       <table style="font-family:sans-serif;font-size:14px;border-collapse:collapse;width:100%">
-        <tr><td style="padding:8px 12px;border:1px solid #e5e5e5"><strong>Nume</strong></td><td style="padding:8px 12px;border:1px solid #e5e5e5">${name}</td></tr>
-        <tr><td style="padding:8px 12px;border:1px solid #e5e5e5"><strong>Email</strong></td><td style="padding:8px 12px;border:1px solid #e5e5e5"><a href="mailto:${email}">${email}</a></td></tr>
-        <tr><td style="padding:8px 12px;border:1px solid #e5e5e5"><strong>Telefon</strong></td><td style="padding:8px 12px;border:1px solid #e5e5e5">${phone}</td></tr>
-        <tr><td style="padding:8px 12px;border:1px solid #e5e5e5"><strong>Vârstă</strong></td><td style="padding:8px 12px;border:1px solid #e5e5e5">${age}</td></tr>
-        <tr><td style="padding:8px 12px;border:1px solid #e5e5e5"><strong>Curs</strong></td><td style="padding:8px 12px;border:1px solid #e5e5e5">${course}</td></tr>
-        <tr><td style="padding:8px 12px;border:1px solid #e5e5e5"><strong>Mesaj</strong></td><td style="padding:8px 12px;border:1px solid #e5e5e5">${message}</td></tr>
+        <tr><td style="padding:8px 12px;border:1px solid #e5e5e5"><strong>Nume</strong></td><td style="padding:8px 12px;border:1px solid #e5e5e5">${safe.name}</td></tr>
+        <tr><td style="padding:8px 12px;border:1px solid #e5e5e5"><strong>Email</strong></td><td style="padding:8px 12px;border:1px solid #e5e5e5"><a href="mailto:${safe.email}">${safe.email}</a></td></tr>
+        <tr><td style="padding:8px 12px;border:1px solid #e5e5e5"><strong>Telefon</strong></td><td style="padding:8px 12px;border:1px solid #e5e5e5">${safe.phone}</td></tr>
+        <tr><td style="padding:8px 12px;border:1px solid #e5e5e5"><strong>Vârstă</strong></td><td style="padding:8px 12px;border:1px solid #e5e5e5">${safe.age}</td></tr>
+        <tr><td style="padding:8px 12px;border:1px solid #e5e5e5"><strong>Curs</strong></td><td style="padding:8px 12px;border:1px solid #e5e5e5">${safe.course}</td></tr>
+        <tr><td style="padding:8px 12px;border:1px solid #e5e5e5"><strong>Mesaj</strong></td><td style="padding:8px 12px;border:1px solid #e5e5e5">${safe.message}</td></tr>
       </table>
       <p style="font-family:sans-serif;font-size:12px;color:#999;margin-top:24px">Trimis de pe edukidvision.ro</p>
     `,
+    text: [
+      `Solicitare nouă de la ${name}`,
+      `Nume: ${name}`,
+      `Email: ${email}`,
+      `Telefon: ${phone}`,
+      `Vârstă: ${age}`,
+      `Curs: ${course}`,
+      `Mesaj: ${message}`,
+    ].join('\n'),
+  };
+
+  const autoReplyOptions = {
+    from: `"EduKid Vision" <${process.env.GMAIL_USER}>`,
+    to: email,
+    subject: `Am primit solicitarea ta — EduKid Vision`,
+    html: `
+      <div style="font-family:sans-serif;max-width:560px;margin:0 auto;color:#1a1a1a">
+        <div style="border-bottom:2px solid #009B9E;padding-bottom:16px;margin-bottom:24px">
+          <h1 style="font-size:22px;margin:0;color:#009B9E">EduKid Vision</h1>
+          <p style="font-size:12px;color:#999;margin:4px 0 0">Education · Inspiration · Leadership</p>
+        </div>
+        <p style="font-size:16px;margin-bottom:8px">Bună, <strong>${safe.name}</strong>!</p>
+        <p style="line-height:1.7;margin-bottom:16px">
+          Îți mulțumim că ne-ai contactat. Am primit solicitarea ta pentru cursul de
+          <strong>${safe.course}</strong> și o vom analiza în cel mai scurt timp.
+        </p>
+        <p style="line-height:1.7;margin-bottom:16px">
+          Un membru al echipei noastre te va contacta în curând la numărul
+          <strong>${safe.phone}</strong> sau pe email pentru a stabili detaliile
+          lecției gratuite.
+        </p>
+        <p style="line-height:1.7;margin-bottom:24px">
+          Până atunci, poți afla mai multe despre cursurile noastre vizitând
+          <a href="https://edukidvision.ro" style="color:#009B9E">edukidvision.ro</a>.
+        </p>
+        <p style="margin:0">Ne auzim curând! 👋</p>
+        <p style="margin:4px 0 0;color:#666">Echipa EduKid Vision</p>
+        <div style="border-top:1px solid #e5e5e5;margin-top:32px;padding-top:16px;font-size:11px;color:#aaa">
+          Str. Vârful cu dor, nr. 18, Arad &nbsp;·&nbsp; contact@edukidvision.ro &nbsp;·&nbsp; +40 745 547 177
+        </div>
+      </div>
+    `,
+    text: [
+      `Bună, ${name}!`,
+      ``,
+      `Îți mulțumim că ne-ai contactat. Am primit solicitarea ta pentru cursul de ${course} și o vom analiza în cel mai scurt timp.`,
+      ``,
+      `Un membru al echipei noastre te va contacta în curând la ${phone} sau pe email pentru a stabili detaliile lecției gratuite.`,
+      ``,
+      `Ne auzim curând!`,
+      `Echipa EduKid Vision`,
+      `edukidvision.ro`,
+    ].join('\n'),
   };
 
   try {
     await transporter.sendMail(mailOptions);
+    // Send auto-reply to customer — fire and forget (don't fail the request if this fails)
+    transporter.sendMail(autoReplyOptions).catch(err => console.error('Auto-reply error:', err));
     res.status(200).json({ ok: true });
   } catch (err) {
     console.error('Mail error:', err);

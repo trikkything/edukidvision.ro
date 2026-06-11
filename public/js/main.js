@@ -93,7 +93,12 @@ if (contactForm) {
       .then((res) => {
         if (res.ok) {
           contactForm.reset();
-          showToast('Mulțumim! Te vom contacta în curând.');
+          contactForm.style.display = 'none';
+          const thanks = document.getElementById('contactThanks');
+          if (thanks) {
+            thanks.style.display = 'block';
+            thanks.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
         } else {
           showToast('Ceva nu a mers. Încearcă din nou sau scrie-ne direct.');
         }
@@ -108,3 +113,57 @@ if (contactForm) {
   });
 }
 
+(function () {
+  function setupCountAnimation(itemSelector, numberSelector) {
+    const items = document.querySelectorAll(itemSelector);
+    const numbers = document.querySelectorAll(`${numberSelector}[data-count-to]`);
+    if (!items.length || !numbers.length) return;
+
+    let hasAnimated = false;
+
+    function animateValue(el) {
+      const target = Number(el.dataset.countTo);
+      const suffix = el.dataset.countSuffix || '';
+      const duration = 1560;
+      const start = performance.now();
+
+      function frame(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const value = Math.round(target * eased);
+
+        el.textContent = `${value}${suffix}`;
+
+        if (progress < 1) {
+          window.requestAnimationFrame(frame);
+        }
+      }
+
+      el.textContent = `0${suffix}`;
+      window.requestAnimationFrame(frame);
+    }
+
+    function startStatsAnimation() {
+      if (hasAnimated) return;
+      hasAnimated = true;
+      numbers.forEach(animateValue);
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      const hasVisibleEntry = entries.some((entry) => entry.isIntersecting);
+      if (!hasVisibleEntry) return;
+
+      startStatsAnimation();
+      observer.disconnect();
+    }, {
+      threshold: 0.25,
+    });
+
+    items.forEach((item) => {
+      observer.observe(item);
+    });
+  }
+
+  setupCountAnimation('.about-stat', '.about-stat-num');
+  setupCountAnimation('.stat-cell', '.stat-num');
+})();
