@@ -929,6 +929,8 @@ textarea { resize: vertical; min-height: 100px; }
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   padding: 1.25rem 0;
 }
 
@@ -1065,6 +1067,8 @@ textarea { resize: vertical; min-height: 100px; }
   .form-row { grid-template-columns: 1fr; }
   .footer-main { grid-template-columns: 1fr; }
   .footer-col  { border-top: 1px solid var(--border); padding: 1.5rem 0 0; margin-top: 0; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; gap: 0.35rem; }
+  .footer-bottom p, .footer-bottom a { font-size: 0.75rem; }
   .section { padding: 3.5rem 0; }
 }
 
