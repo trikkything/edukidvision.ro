@@ -5,6 +5,8 @@ const fs         = require('fs');
 const nodemailer = require('nodemailer');
 const session    = require('express-session');
 const multer     = require('multer');
+const helmet     = require('helmet');
+const rateLimit  = require('express-rate-limit');
 
 const app  = express();
 const port = process.env.PORT || 3002;
@@ -27,6 +29,43 @@ const transporter = nodemailer.createTransport({
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+/* ─── Security middleware ─────────────────────────────────────────────── */
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc:  ["'self'"],
+      scriptSrc:   ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com"],
+      styleSrc:    ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
+      fontSrc:     ["'self'", "https://fonts.gstatic.com"],
+      imgSrc:      ["'self'", "data:", "https:"],
+      frameSrc:    ["https://www.google.com"],
+      connectSrc:  ["'self'"],
+    },
+  },
+  crossOriginEmbedderPolicy: false,
+}));
+
+// Trust Nginx proxy (needed for correct IP in rate limiter)
+app.set('trust proxy', 1);
+
+// Rate limiter for contact form — max 5 submissions per 15 min per IP
+const contactLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: { error: 'Prea multe solicitări. Încearcă din nou peste 15 minute.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Rate limiter for admin login — max 10 attempts per 15 min per IP
+const adminLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: 'Prea multe încercări. Încearcă din nou peste 15 minute.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -34,7 +73,12 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'edukid-secret',
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 8 * 60 * 60 * 1000 }, // 8 hours
+  cookie: {
+    maxAge: 8 * 60 * 60 * 1000, // 8 hours
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+  },
 }));
 
 /* ─── Course data helpers ─────────────────────────────────────────────── */
@@ -390,7 +434,7 @@ app.get('/admin/login', (req, res) => {
   res.render('admin/login', { error: null });
 });
 
-app.post('/admin/login', (req, res) => {
+app.post('/admin/login', adminLimiter, (req, res) => {
   const { username, password } = req.body;
   if (username === process.env.ADMIN_USER && password === process.env.ADMIN_PASSWORD) {
     req.session.admin = true;
@@ -548,7 +592,7 @@ app.post('/admin/posts/:id/delete', requireAdmin, (req, res) => {
 });
 
 /* ─── Contact form POST ───────────────────────────────────────────────── */
-app.post('/contact', async (req, res) => {
+app.post('/contact', contactLimiter, async (req, res) => {
   const name = String(req.body.name || '').trim();
   const email = String(req.body.email || '').trim();
   const phone = String(req.body.phone || '').trim();
