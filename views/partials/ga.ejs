@@ -1,8 +1,38 @@
+<!-- Google Consent Mode v2 — defaults BEFORE gtag loads -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+
+  // Default: everything denied until user consents
+  gtag('consent', 'default', {
+    analytics_storage:   'denied',
+    ad_storage:          'denied',
+    ad_user_data:        'denied',
+    ad_personalization:  'denied',
+    wait_for_update:     500
+  });
+
+  // If user already consented in a previous visit, restore immediately
+  (function() {
+    try {
+      var c = localStorage.getItem('ekv_consent');
+      if (c === 'granted') {
+        gtag('consent', 'update', {
+          analytics_storage:  'granted',
+          ad_storage:         'granted',
+          ad_user_data:       'granted',
+          ad_personalization: 'granted'
+        });
+      }
+    } catch(e) {}
+  })();
+</script>
+
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-MD02LNT1V0"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-MD02LNT1V0');
+  gtag('config', 'G-MD02LNT1V0', { send_page_view: true });
 </script>

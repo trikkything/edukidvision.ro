@@ -1,0 +1,52 @@
+<!-- Cookie consent banner -->
+<div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Consimțământ cookie-uri" style="display:none">
+  <div class="cookie-banner-inner">
+    <div class="cookie-banner-text">
+      <p class="cookie-banner-title">Folosim cookie-uri</p>
+      <p class="cookie-banner-desc">
+        Utilizăm cookie-uri pentru a analiza traficul și a îmbunătăți experiența pe site.
+        Poți accepta toate cookie-urile sau doar pe cele esențiale.
+        <a href="/politica-cookies" class="cookie-banner-link">Află mai mult</a>
+      </p>
+    </div>
+    <div class="cookie-banner-actions">
+      <button id="cookieReject" class="btn btn-outline btn--sm cookie-btn-reject">Doar esențiale</button>
+      <button id="cookieAccept" class="btn btn-primary btn--sm">Acceptă toate</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var banner = document.getElementById('cookieBanner');
+  var consent = null;
+  try { consent = localStorage.getItem('ekv_consent'); } catch(e) {}
+
+  if (!consent) {
+    banner.style.display = 'block';
+    setTimeout(function() { banner.classList.add('is-visible'); }, 100);
+  }
+
+  function updateConsent(state) {
+    try { localStorage.setItem('ekv_consent', state); } catch(e) {}
+    if (typeof gtag === 'function') {
+      gtag('consent', 'update', {
+        analytics_storage:  state,
+        ad_storage:         state,
+        ad_user_data:       state,
+        ad_personalization: state
+      });
+    }
+    banner.classList.remove('is-visible');
+    setTimeout(function() { banner.style.display = 'none'; }, 350);
+  }
+
+  document.getElementById('cookieAccept').addEventListener('click', function() {
+    updateConsent('granted');
+  });
+
+  document.getElementById('cookieReject').addEventListener('click', function() {
+    updateConsent('denied');
+  });
+})();
+</script>
