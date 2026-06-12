@@ -384,8 +384,8 @@ app.get('/', (req, res) => {
   const nonFeatured  = activePosts.filter(p => !p.featured);
   const latestPosts  = [...featured, ...nonFeatured].slice(0, 6);
   res.render('index', {
-    pageTitle: 'Edukid Vision | Cursuri de Engleză, Leadership și IT pentru copii și adulți',
-    metaDescription: 'Edukid Vision oferă cursuri de Engleză, Leadership și IT pentru copii și adulți, în grupe mici, cu profesori dedicați și sprijin real pentru familii.',
+    pageTitle: 'Cursuri Engleză Copii & Adulți Arad | Limba Engleză | EduKid Vision',
+    metaDescription: 'Cursuri de engleză pentru copii și adulți în Arad. Engleza copii 5–14 ani, limba engleză conversațională și business. Grupe mici, profesori dedicați. Prima lecție gratuită!',
     latestPosts,
   });
 });
