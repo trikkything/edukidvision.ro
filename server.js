@@ -389,6 +389,11 @@ app.get('/', (req, res) => {
   });
 });
 
+/* ─── Cookie policy ───────────────────────────────────────────────────── */
+app.get('/politica-cookies', (req, res) => {
+  res.render('politica-cookies');
+});
+
 /* ─── Public news routes ──────────────────────────────────────────────── */
 app.get('/noutati', (req, res) => {
   const posts = loadPosts()
