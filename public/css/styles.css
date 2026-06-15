@@ -388,6 +388,16 @@ p { color: var(--ink-muted); line-height: 1.7; }
 .hero-headline .line-green  { color: var(--green); }
 .hero-headline .line-teal   { color: var(--teal); }
 .hero-headline .line-orange { color: var(--orange); }
+.hero-h1-sub {
+  display: block;
+  font-family: var(--ff);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-top: 1.1rem;
+}
 
 .hero-body {
   font-size: 0.95rem;
