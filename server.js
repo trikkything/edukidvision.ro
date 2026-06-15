@@ -114,9 +114,13 @@ function savePosts(list) {
   fs.writeFileSync(POSTS_FILE, JSON.stringify(list, null, 2));
 }
 
+/* ─── Ensure upload directory exists ─────────────────────────────────── */
+const POST_IMG_DIR = path.join(__dirname, 'public', 'images', 'posts');
+fs.mkdirSync(POST_IMG_DIR, { recursive: true });
+
 /* ─── Multer — cover image uploads ───────────────────────────────────── */
 const postImgStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, path.join(__dirname, 'public', 'images', 'posts')),
+  destination: (req, file, cb) => cb(null, POST_IMG_DIR),
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname).toLowerCase();
     cb(null, `post-${Date.now()}${ext}`);
@@ -519,10 +523,17 @@ app.get('/admin/posts/new', requireAdmin, (req, res) => {
   res.render('admin/post-form', { post: null, error: null });
 });
 
-app.post('/admin/posts/upload-image', requireAdmin, (req, res) => {
+app.post('/admin/posts/upload-image', requireAdmin, (req, res, next) => {
   uploadPostImg.single('image')(req, res, err => {
-    if (err) return res.status(400).json({ error: err.message });
-    if (!req.file) return res.status(400).json({ error: 'Niciun fișier primit.' });
+    if (err) {
+      console.error('[upload-image] multer error:', err.message);
+      return res.status(400).json({ error: err.message });
+    }
+    if (!req.file) {
+      console.error('[upload-image] no file received');
+      return res.status(400).json({ error: 'Niciun fișier primit.' });
+    }
+    console.log('[upload-image] saved:', req.file.filename);
     res.json({ url: `/images/posts/${req.file.filename}` });
   });
 });

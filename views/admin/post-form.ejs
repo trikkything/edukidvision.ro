@@ -128,8 +128,8 @@
 
           <div id="cover-panel-upload" class="cover-tab-panel is-active">
             <div class="upload-btn-wrap">
+              <label for="f-image-file" class="admin-btn admin-btn--sm" style="cursor:pointer;display:inline-flex;align-items:center">Alege imagine</label>
               <input type="file" id="f-image-file" accept="image/jpeg,image/png,image/webp" style="display:none" />
-              <button type="button" class="admin-btn admin-btn--sm" onclick="document.getElementById('f-image-file').click()">Alege imagine</button>
               <span class="upload-status" id="upload-status">Niciun fișier ales</span>
             </div>
           </div>
@@ -212,20 +212,28 @@
     document.getElementById('f-image-file').addEventListener('change', async function() {
       if (!this.files[0]) return;
       const statusEl = document.getElementById('upload-status');
+      statusEl.style.color = '';
       statusEl.textContent = 'Încărcare...';
       const fd = new FormData();
       fd.append('image', this.files[0]);
       try {
         const r = await fetch('/admin/posts/upload-image', { method: 'POST', body: fd });
         const data = await r.json();
-        if (data.error) { statusEl.textContent = 'Eroare: ' + data.error; return; }
+        if (data.error) {
+          statusEl.style.color = '#c0392b';
+          statusEl.textContent = '✗ Eroare: ' + data.error;
+          return;
+        }
         document.getElementById('f-coverImage').value = data.url;
         const prev = document.getElementById('cover-preview');
         prev.src = data.url;
         prev.classList.add('is-visible');
-        statusEl.textContent = 'Imagine încărcată ✓';
+        statusEl.style.color = '#27ae60';
+        statusEl.textContent = '✓ Imagine încărcată cu succes';
       } catch(e) {
-        statusEl.textContent = 'Eroare la încărcare.';
+        statusEl.style.color = '#c0392b';
+        statusEl.textContent = '✗ Eroare la încărcare: ' + e.message;
+        console.error('Upload error:', e);
       }
     });
 
