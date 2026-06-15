@@ -394,6 +394,58 @@ app.get('/', (req, res) => {
   });
 });
 
+/* ─── Sitemap ─────────────────────────────────────────────────────────── */
+app.get('/sitemap.xml', (req, res) => {
+  const base    = 'https://edukidvision.ro';
+  const today   = new Date().toISOString().split('T')[0];
+  const courses = loadCourses().filter(c => c.active);
+  const posts   = loadPosts().filter(p => p.active);
+
+  const urls = [
+    { loc: '/',              priority: '1.0', changefreq: 'weekly',  lastmod: today },
+    { loc: '/noutati',       priority: '0.8', changefreq: 'weekly',  lastmod: today },
+    ...courses.map(c => ({
+      loc:        `/cursuri/${c.audience}/${c.slug}`,
+      priority:   '0.8',
+      changefreq: 'monthly',
+      lastmod:    today,
+    })),
+    ...posts.map(p => ({
+      loc:        `/noutati/${p.slug}`,
+      priority:   '0.7',
+      changefreq: 'monthly',
+      lastmod:    p.publishDate || today,
+    })),
+    { loc: '/politica-cookies', priority: '0.3', changefreq: 'yearly', lastmod: today },
+  ];
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls.map(u => `  <url>
+    <loc>${base}${u.loc}</loc>
+    <lastmod>${u.lastmod}</lastmod>
+    <changefreq>${u.changefreq}</changefreq>
+    <priority>${u.priority}</priority>
+  </url>`).join('\n')}
+</urlset>`;
+
+  res.set('Content-Type', 'application/xml');
+  res.send(xml);
+});
+
+/* ─── Robots.txt ──────────────────────────────────────────────────────── */
+app.get('/robots.txt', (req, res) => {
+  res.set('Content-Type', 'text/plain');
+  res.send(`User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /admin/*
+
+Sitemap: https://edukidvision.ro/sitemap.xml
+`);
+});
+
 /* ─── Cookie policy ───────────────────────────────────────────────────── */
 app.get('/politica-cookies', (req, res) => {
   res.render('politica-cookies');
