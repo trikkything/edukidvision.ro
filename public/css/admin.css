@@ -194,3 +194,127 @@ input[readonly] { background: var(--bg); color: var(--ink-faint); }
   transform: translateY(8px); transition: opacity 0.2s, transform 0.2s;
 }
 .admin-toast.is-visible { opacity: 1; transform: translateY(0); }
+
+/* ── Gallery upload slots (post-form) ─────────────────────────────────── */
+.gallery-slots {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.gallery-slot {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.gallery-slot-preview {
+  border: 1px dashed var(--border);
+  background: var(--bg);
+  aspect-ratio: 4/3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+.gallery-slot-thumb {
+  display: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+}
+.gallery-slot-thumb.is-visible { display: block; }
+.gallery-slot-placeholder {
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+.gallery-slot-thumb.is-visible ~ .gallery-slot-placeholder { display: none; }
+.gallery-slot-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.gallery-slot-status {
+  font-size: 0.72rem;
+  min-height: 1em;
+  display: block;
+}
+
+/* ── Image manager page ───────────────────────────────────────────────── */
+.imgmgr-summary {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.85rem 1.25rem;
+  background: var(--white);
+  border: 1px solid var(--border);
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  margin-bottom: 1.5rem;
+}
+.imgmgr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+.imgmgr-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+.imgmgr-card.is-unused { border-color: #fecaca; }
+.imgmgr-thumb-wrap {
+  display: block;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  background: var(--bg);
+}
+.imgmgr-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.2s;
+}
+.imgmgr-thumb-wrap:hover .imgmgr-thumb { transform: scale(1.05); }
+.imgmgr-info {
+  padding: 0.6rem 0.75rem 0.5rem;
+  flex: 1;
+}
+.imgmgr-filename {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.3rem;
+}
+.imgmgr-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+}
+.imgmgr-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.45rem;
+}
+.badge-used   { background: #f0fafa; color: var(--teal); }
+.badge-unused { background: #fef2f2; color: var(--danger); }
+.imgmgr-delete-form {
+  padding: 0.5rem 0.75rem 0.75rem;
+  border-top: 1px solid #fecaca;
+}
+.imgmgr-delete-form .admin-btn { width: 100%; justify-content: center; }

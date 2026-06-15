@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manager imagini — EduKid Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body class="admin-page">
+
+  <aside class="admin-sidebar">
+    <a href="/admin" class="admin-brand">
+      <img src="/images/logo-mark-400.png" alt="" class="admin-brand-logo" />
+      <div>
+        <div class="admin-brand-name"><span style="color:#7CBB6A">EduKid</span><span style="color:#009B9E"> Vision</span></div>
+        <div class="admin-brand-sub">Admin</div>
+      </div>
+    </a>
+    <nav class="admin-nav">
+      <a href="/admin" class="admin-nav-link">Cursuri</a>
+      <a href="/admin/posts" class="admin-nav-link">Articole</a>
+      <a href="/admin/images" class="admin-nav-link is-active">Imagini</a>
+      <a href="/" class="admin-nav-link" target="_blank">Vezi site ↗</a>
+    </nav>
+    <form method="POST" action="/admin/logout" class="admin-logout">
+      <button type="submit" class="admin-nav-link admin-nav-link--logout">Ieșire</button>
+    </form>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <div>
+        <h1 class="admin-page-title">Manager imagini</h1>
+        <p style="font-size:0.82rem;color:var(--ink-faint);margin-top:0.2rem">
+          Toate imaginile încărcate pentru articole.
+          Imaginile marcate <span style="color:var(--danger);font-weight:600">Nefolosit</span> nu sunt referențiate în niciun articol și pot fi șterse.
+        </p>
+      </div>
+    </div>
+
+    <% if (images.length === 0) { %>
+    <div style="background:var(--white);border:1px solid var(--border);padding:2.5rem;text-align:center;color:var(--ink-faint)">
+      Nicio imagine încărcată încă.
+    </div>
+    <% } else { %>
+
+    <!-- Summary bar -->
+    <div class="imgmgr-summary">
+      <span><strong><%= images.length %></strong> imagini totale</span>
+      <span style="color:var(--teal)"><strong><%= images.filter(i => i.used).length %></strong> folosite</span>
+      <span style="color:var(--danger)"><strong><%= images.filter(i => !i.used).length %></strong> nefolosite</span>
+    </div>
+
+    <div class="imgmgr-grid">
+      <% images.forEach(img => { %>
+      <div class="imgmgr-card<%= img.used ? '' : ' is-unused' %>">
+        <a href="<%= img.url %>" target="_blank" class="imgmgr-thumb-wrap" title="Deschide imaginea">
+          <img src="<%= img.url %>" alt="<%= img.filename %>" loading="lazy" class="imgmgr-thumb" />
+        </a>
+        <div class="imgmgr-info">
+          <div class="imgmgr-filename" title="<%= img.filename %>"><%= img.filename %></div>
+          <div class="imgmgr-meta">
+            <span><%= img.sizeKb %> KB</span>
+            <span class="imgmgr-badge<%= img.used ? ' badge-used' : ' badge-unused' %>">
+              <%= img.used ? 'Folosit' : 'Nefolosit' %>
+            </span>
+          </div>
+        </div>
+        <% if (!img.used) { %>
+        <form method="POST" action="/admin/images/<%= encodeURIComponent(img.filename) %>/delete"
+              class="imgmgr-delete-form"
+              onsubmit="return confirm('Ești sigur că vrei să ștergi imaginea:\n<%= img.filename %>')">
+          <button type="submit" class="admin-btn admin-btn--sm admin-btn--danger" title="Șterge imaginea">Șterge</button>
+        </form>
+        <% } %>
+      </div>
+      <% }) %>
+    </div>
+
+    <% } %>
+  </main>
+
+</body>
+</html>

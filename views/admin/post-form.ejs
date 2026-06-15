@@ -40,6 +40,7 @@
     <nav class="admin-nav">
       <a href="/admin" class="admin-nav-link">Cursuri</a>
       <a href="/admin/posts" class="admin-nav-link is-active">Articole</a>
+      <a href="/admin/images" class="admin-nav-link">Imagini</a>
       <a href="/" class="admin-nav-link" target="_blank">Vezi site ↗</a>
     </nav>
     <form method="POST" action="/admin/logout" class="admin-logout">
@@ -158,6 +159,34 @@
         </div>
       </div>
 
+      <!-- Gallery images (max 3) -->
+      <div class="admin-form-section">
+        <div class="admin-form-section-header">
+          <h2 class="admin-form-section-title">Galerie imagini <span style="font-weight:400;color:var(--ink-faint);font-size:0.82rem">(max. 3)</span></h2>
+        </div>
+        <div style="padding:1.25rem">
+          <p class="admin-hint" style="margin-bottom:1.25rem">Imaginile din galerie apar sub textul articolului. Fiecare imagine poate fi mărită cu click.</p>
+          <div class="gallery-slots">
+            <% for (let i = 0; i < 3; i++) { %>
+            <% const gVal = (post && post.gallery && post.gallery[i]) ? post.gallery[i] : ''; %>
+            <div class="gallery-slot" id="gslot-<%= i %>">
+              <div class="gallery-slot-preview">
+                <img src="<%= gVal %>" alt="" class="gallery-slot-thumb<%= gVal ? ' is-visible' : '' %>" id="gthumb-<%= i %>" />
+                <span class="gallery-slot-placeholder">+ Adaugă</span>
+              </div>
+              <input type="hidden" name="gallery_<%= i %>" id="gval-<%= i %>" value="<%= gVal %>" />
+              <input type="file" id="gfile-<%= i %>" data-slot="<%= i %>" accept="image/jpeg,image/png,image/webp" style="display:none" />
+              <div class="gallery-slot-actions">
+                <label for="gfile-<%= i %>" class="admin-btn admin-btn--sm" style="cursor:pointer">Alege</label>
+                <button type="button" class="admin-btn admin-btn--sm admin-btn--danger" id="gremove-<%= i %>" onclick="removeGallery(<%= i %>)" style="<%= gVal ? '' : 'display:none' %>">✕</button>
+              </div>
+              <span class="gallery-slot-status" id="gstatus-<%= i %>"></span>
+            </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+
       <div class="admin-form-actions">
         <a href="/admin/posts" class="admin-btn">Anulează</a>
         <button type="submit" class="admin-btn admin-btn--primary">Salvează articolul</button>
@@ -236,6 +265,51 @@
         console.error('Upload error:', e);
       }
     });
+
+    /* ── Gallery upload ── */
+    async function uploadGalleryFile(slot, file) {
+      const statusEl = document.getElementById('gstatus-' + slot);
+      statusEl.style.color = '';
+      statusEl.textContent = 'Încărcare...';
+      const fd = new FormData();
+      fd.append('image', file);
+      try {
+        const r = await fetch('/admin/posts/upload-image', { method: 'POST', body: fd });
+        const data = await r.json();
+        if (data.error) {
+          statusEl.style.color = '#c0392b';
+          statusEl.textContent = '✗ ' + data.error;
+          return;
+        }
+        document.getElementById('gval-' + slot).value = data.url;
+        const thumb = document.getElementById('gthumb-' + slot);
+        thumb.src = data.url;
+        thumb.classList.add('is-visible');
+        document.getElementById('gremove-' + slot).style.display = '';
+        statusEl.style.color = '#27ae60';
+        statusEl.textContent = '✓ Imaginea a fost încărcată';
+      } catch(e) {
+        statusEl.style.color = '#c0392b';
+        statusEl.textContent = '✗ Eroare: ' + e.message;
+      }
+    }
+
+    function removeGallery(slot) {
+      document.getElementById('gval-' + slot).value = '';
+      const thumb = document.getElementById('gthumb-' + slot);
+      thumb.src = '';
+      thumb.classList.remove('is-visible');
+      document.getElementById('gremove-' + slot).style.display = 'none';
+      document.getElementById('gfile-' + slot).value = '';
+      const statusEl = document.getElementById('gstatus-' + slot);
+      statusEl.textContent = '';
+    }
+
+    for (let i = 0; i < 3; i++) {
+      document.getElementById('gfile-' + i).addEventListener('change', function() {
+        if (this.files[0]) uploadGalleryFile(parseInt(this.dataset.slot), this.files[0]);
+      });
+    }
 
     /* Apply external URL */
     function applyImageUrl() {

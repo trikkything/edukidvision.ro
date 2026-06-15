@@ -54,6 +54,22 @@
           <div class="post-body">
             <%- post.content %>
           </div>
+
+          <!-- Gallery -->
+          <% if (post.gallery && post.gallery.length > 0) { %>
+          <div class="post-gallery">
+            <div class="post-gallery-label">Galerie foto</div>
+            <div class="post-gallery-grid post-gallery-grid--<%= post.gallery.length %>">
+              <% post.gallery.forEach((imgUrl, idx) => { %>
+              <button class="post-gallery-item" onclick="openLightbox(this)" aria-label="Deschide imaginea <%= idx + 1 %>">
+                <img src="<%= imgUrl %>" alt="Foto <%= idx + 1 %>" class="post-gallery-img" />
+                <span class="post-cover-zoom">&#x2B0C; Mărește</span>
+              </button>
+              <% }) %>
+            </div>
+          </div>
+          <% } %>
+
           <div class="post-footer">
             <a href="/noutati" class="back-link">← Toate noutățile</a>
             <a href="/#contact" class="btn btn-primary">Înscrie-te la un curs</a>

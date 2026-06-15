@@ -543,12 +543,13 @@ app.post('/admin/posts', requireAdmin, (req, res) => {
     const posts = loadPosts();
     const { title, slug, excerpt, content, category, coverImage, publishDate } = req.body;
     const featured = req.body.featured === '1';
+    const gallery = [req.body.gallery_0, req.body.gallery_1, req.body.gallery_2].filter(Boolean);
     if (!title || !slug) return res.render('admin/post-form', { post: null, error: 'Titlul și slug-ul sunt obligatorii.' });
     if (posts.find(p => p.id === slug)) return res.render('admin/post-form', { post: null, error: `Un articol cu slug-ul "${slug}" există deja.` });
     if (featured && posts.filter(p => p.featured).length >= 3) {
       return res.render('admin/post-form', { post: null, error: 'Sunt deja 3 articole promovate. Dezactivează unul înainte de a adăuga altul.' });
     }
-    posts.push({ id: slug, slug, title, excerpt: excerpt || '', content: content || '', category: category || 'Noutăți', coverImage: coverImage || '', publishDate: publishDate || new Date().toISOString().split('T')[0], active: true, featured });
+    posts.push({ id: slug, slug, title, excerpt: excerpt || '', content: content || '', category: category || 'Noutăți', coverImage: coverImage || '', gallery, publishDate: publishDate || new Date().toISOString().split('T')[0], active: true, featured });
     savePosts(posts);
     res.redirect('/admin/posts');
   } catch (e) {
@@ -569,10 +570,11 @@ app.post('/admin/posts/:id', requireAdmin, (req, res) => {
     if (idx === -1) return res.status(404).send('Articolul nu a fost găsit.');
     const { title, excerpt, content, category, coverImage, publishDate } = req.body;
     const featured = req.body.featured === '1';
+    const gallery = [req.body.gallery_0, req.body.gallery_1, req.body.gallery_2].filter(Boolean);
     if (featured && !posts[idx].featured && posts.filter(p => p.featured).length >= 3) {
       return res.render('admin/post-form', { post: posts[idx], error: 'Sunt deja 3 articole promovate. Dezactivează unul înainte de a promova altul.' });
     }
-    posts[idx] = { ...posts[idx], title, excerpt: excerpt || '', content: content || '', category: category || 'Noutăți', coverImage: coverImage || '', publishDate: publishDate || posts[idx].publishDate, featured };
+    posts[idx] = { ...posts[idx], title, excerpt: excerpt || '', content: content || '', category: category || 'Noutăți', coverImage: coverImage || '', gallery, publishDate: publishDate || posts[idx].publishDate, featured };
     savePosts(posts);
     res.redirect('/admin/posts');
   } catch (e) {
@@ -606,6 +608,36 @@ app.post('/admin/posts/:id/delete', requireAdmin, (req, res) => {
   const posts = loadPosts().filter(p => p.id !== req.params.id);
   savePosts(posts);
   res.redirect('/admin/posts');
+});
+
+/* ─── Image manager ───────────────────────────────────────────────────── */
+app.get('/admin/images', requireAdmin, (req, res) => {
+  const files = fs.existsSync(POST_IMG_DIR)
+    ? fs.readdirSync(POST_IMG_DIR).filter(f => /\.(jpe?g|png|webp|gif)$/i.test(f))
+    : [];
+
+  const posts = loadPosts();
+  const usedSet = new Set();
+  posts.forEach(p => {
+    if (p.coverImage) usedSet.add(path.basename(p.coverImage));
+    if (Array.isArray(p.gallery)) p.gallery.forEach(img => usedSet.add(path.basename(img)));
+  });
+
+  const images = files.map(f => ({
+    filename: f,
+    url: `/images/posts/${f}`,
+    used: usedSet.has(f),
+    sizeKb: Math.round(fs.statSync(path.join(POST_IMG_DIR, f)).size / 1024),
+  })).sort((a, b) => Number(a.used) - Number(b.used) || a.filename.localeCompare(b.filename));
+
+  res.render('admin/images', { images });
+});
+
+app.post('/admin/images/:filename/delete', requireAdmin, (req, res) => {
+  const filename = path.basename(req.params.filename); // prevent path traversal
+  const filepath = path.join(POST_IMG_DIR, filename);
+  if (fs.existsSync(filepath)) fs.unlinkSync(filepath);
+  res.redirect('/admin/images');
 });
 
 /* ─── Contact form POST ───────────────────────────────────────────────── */
