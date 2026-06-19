@@ -24,11 +24,15 @@ jobs:
 
             APP_DIR=/var/www/edukidvision
 
-            # Pull latest code
+            # Update code while preserving server-side post content
             if [ ! -d "$APP_DIR/.git" ]; then
               git clone https://github.com/trikkything/edukidvision.ro.git $APP_DIR
             else
-              cd $APP_DIR && git pull origin main
+              cd $APP_DIR
+              cp data/posts.json /tmp/edukidvision-posts.json 2>/dev/null || true
+              git fetch origin main
+              git reset --hard origin/main
+              cp /tmp/edukidvision-posts.json data/posts.json 2>/dev/null || true
             fi
 
             cd $APP_DIR
