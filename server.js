@@ -34,13 +34,13 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc:    ["'self'"],
-      scriptSrc:     ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com", "https://www.googletagmanager.com", "https://ssl.google-analytics.com", "https://www.google-analytics.com"],
-      scriptSrcElem: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com", "https://www.googletagmanager.com", "https://ssl.google-analytics.com", "https://www.google-analytics.com"],
+      scriptSrc:     ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com", "https://www.googletagmanager.com", "https://ssl.google-analytics.com", "https://www.google-analytics.com", "https://googleads.g.doubleclick.net", "https://www.googleadservices.com"],
+      scriptSrcElem: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com", "https://www.googletagmanager.com", "https://ssl.google-analytics.com", "https://www.google-analytics.com", "https://googleads.g.doubleclick.net", "https://www.googleadservices.com"],
       styleSrc:      ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
       fontSrc:       ["'self'", "https://fonts.gstatic.com"],
-      imgSrc:        ["'self'", "data:", "https:", "https://www.googletagmanager.com", "https://ssl.google-analytics.com", "https://www.google-analytics.com"],
-      frameSrc:      ["https://www.google.com"],
-      connectSrc:    ["'self'", "https://www.google-analytics.com", "https://analytics.google.com", "https://stats.g.doubleclick.net", "https://region1.google-analytics.com", "https://region1.analytics.google.com"],
+      imgSrc:        ["'self'", "data:", "https:", "https://www.googletagmanager.com", "https://ssl.google-analytics.com", "https://www.google-analytics.com", "https://googleads.g.doubleclick.net"],
+      frameSrc:      ["https://www.google.com", "https://bid.g.doubleclick.net"],
+      connectSrc:    ["'self'", "https://www.google-analytics.com", "https://analytics.google.com", "https://stats.g.doubleclick.net", "https://region1.google-analytics.com", "https://region1.analytics.google.com", "https://googleads.g.doubleclick.net", "https://www.googleadservices.com"],
     },
   },
   crossOriginEmbedderPolicy: false,
@@ -457,8 +457,8 @@ app.get('/noutati', (req, res) => {
     .filter(p => p.active)
     .sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
   res.render('noutati', {
-    pageTitle: 'Noutăți | EduKid Vision',
-    metaDescription: 'Ultimele noutăți, anunțuri și articole de la EduKid Vision.',
+    pageTitle: 'Noutăți & Curs de Vară 2026 | EduKid Vision Arad',
+    metaDescription: 'Noutăți EduKid Vision Arad: curs de vară 2026, cursuri de engleză copii & adulți, evenimente și anunțuri.',
     posts,
   });
 });

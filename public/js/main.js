@@ -99,6 +99,10 @@ if (contactForm) {
             thanks.style.display = 'block';
             thanks.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
+          // Google Ads conversion — fires on successful form submission
+          if (typeof gtag === 'function') {
+            gtag('event', 'conversion_event_purchase');
+          }
         } else {
           showToast('Ceva nu a mers. Încearcă din nou sau scrie-ne direct.');
         }
