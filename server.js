@@ -389,7 +389,7 @@ app.get('/', (req, res) => {
   const latestPosts  = [...featured, ...nonFeatured].slice(0, 6);
   res.render('index', {
     pageTitle: 'Cursuri Engleză Copii & Adulți Arad | Limba Engleză | EduKid Vision',
-    metaDescription: 'Cursuri de engleză pentru copii (5–14 ani) și adulți în Arad. Engleza copii, limba engleză conversațională și business, grupe mici. Prima lecție gratuită!',
+    metaDescription: 'Cursuri de engleză pentru copii (0–18 ani) și adulți în Arad. Engleza copii, limba engleză conversațională și business, grupe mici. Prima lecție gratuită!',
     latestPosts,
   });
 });
