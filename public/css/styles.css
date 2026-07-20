@@ -135,6 +135,7 @@ p { color: var(--ink-muted); line-height: 1.7; }
   align-items: center;
   justify-content: space-between;
   min-height: 72px;
+  padding: 0.5rem 0;
   gap: 2rem;
 }
 
@@ -146,38 +147,9 @@ p { color: var(--ink-muted); line-height: 1.7; }
   flex-shrink: 0;
 }
 
-.brand-icon {
-  height: clamp(40px, 5.5vw, 52px);
+.brand-logo {
+  height: clamp(72px, 10.5vw, 96px);
   width: auto;
-}
-
-.brand-wordmark {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  line-height: 1;
-}
-
-.brand-name {
-  font-family: var(--ff-display);
-  font-size: clamp(1rem, 2.2vw, 1.35rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-}
-
-.brand-name-edu  { color: var(--green); }
-.brand-name-kid  { color: var(--green); }
-.brand-name-vis  { color: var(--teal); }
-
-.brand-tagline {
-  font-family: var(--ff-display);
-  font-size: clamp(0.55rem, 1vw, 0.68rem);
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  color: var(--coral);
-  margin-top: 2px;
-  white-space: nowrap;
 }
 
 /* Nav links */
@@ -878,31 +850,10 @@ textarea { resize: vertical; min-height: 100px; }
 .footer-brand { padding-right: 3rem; border-right: 1px solid var(--border); }
 
 /* Full logo in footer */
-.footer-logo-wrap {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
+.footer-logo {
+  height: clamp(64px, 9vw, 84px);
+  width: auto;
   margin-bottom: 1rem;
-}
-
-.footer-icon { height: 44px; width: auto; }
-
-.footer-wordmark { display: flex; flex-direction: column; gap: 2px; }
-
-.footer-brand-name {
-  font-family: var(--ff-display);
-  font-size: 1.1rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1;
-}
-
-.footer-brand-tagline {
-  font-family: var(--ff-display);
-  font-size: 0.6rem;
-  font-weight: 500;
-  letter-spacing: 0.07em;
-  color: var(--coral);
 }
 
 .footer-desc { font-size: 0.88rem; color: var(--ink-muted); line-height: 1.7; }
@@ -1059,8 +1010,6 @@ textarea { resize: vertical; min-height: 100px; }
   .nav-dropdown-col--right { border-left: none; border-top: 1px solid var(--border); }
 
   .nav-dropdown-item { padding: 0.7rem 1rem; }
-
-  .brand-tagline { display: none; }
 
   .hero { padding: 2rem 0 0; }
   .hero-image-wrap { min-height: 240px; }
