@@ -314,10 +314,10 @@ const _courses_placeholder = {
     copii: {
       title: 'IT & Programare pentru Copii',
       pageTitle: 'IT și Programare pentru Copii | EduKid Vision',
-      metaDescription: 'Cursuri de programare pentru copii 7–17 ani. Scratch, Python, HTML/CSS, robotică și proiecte digitale creative.',
+      metaDescription: 'Cursuri de programare pentru copii 7–17 ani. Activități practice, jocuri și proiecte creative',
       intro: 'Când un copil vede că poate crea un joc, un robot sau un site web, tehnologia devine magie. Cursurile noastre transformă ecranul dintr-un consumator de timp într-un instrument de creație. Predăm programare și robotică prin proiecte reale, fără teorie goală.',
       forWhom: [
-        { group: 'Copii 7–10 ani', desc: 'Scratch și programare vizuală. Creăm jocuri, animații și povești interactive. Zero experiență necesară.' },
+        { group: 'Copii 7–10 ani', desc: 'Activități practice, jocuri și proiecte creative.' },
         { group: 'Copii 11–14 ani', desc: 'Python fundamentals, HTML/CSS de bază și robotică cu LEGO Mindstorms. Primul site web real.' },
         { group: 'Adolescenți 15–17 ani', desc: 'Python avansat, JavaScript, baze de date, proiecte full-stack și pregătire pentru olimpiade IT.' },
         { group: 'Pregătire olimpiade IT', desc: 'Algoritmi, structuri de date și rezolvare de probleme pentru concursuri naționale.' },
