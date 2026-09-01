@@ -126,20 +126,27 @@
   <script>
     function togglePost(btn) {
       const id = btn.dataset.id;
-      fetch(`/admin/posts/${id}/toggle`, { method: 'POST' })
-        .then(r => r.json())
+      fetch(`/admin/posts/${id}/toggle`, { method: 'POST', headers: { Accept: 'application/json' } })
+        .then(async r => {
+          if (r.status === 401) { showToast('⚠ Sesiune expirată. Reîncarcă pagina și reautentifică-te.'); return; }
+          if (!r.ok) { showToast('⚠ A apărut o eroare. Încearcă din nou.'); return; }
+          return r.json();
+        })
         .then(data => {
+          if (!data) return;
           btn.classList.toggle('is-active', data.active);
           btn.querySelector('.toggle-label').textContent = data.active ? 'Activ' : 'Inactiv';
           btn.title = data.active ? 'Dezactivează' : 'Activează';
           showToast(data.active ? 'Articol activat' : 'Articol dezactivat');
-        });
+        })
+        .catch(() => showToast('⚠ Eroare de rețea. Încearcă din nou.'));
     }
 
     function featurePost(btn) {
       const id = btn.dataset.id;
-      fetch(`/admin/posts/${id}/feature`, { method: 'POST' })
+      fetch(`/admin/posts/${id}/feature`, { method: 'POST', headers: { Accept: 'application/json' } })
         .then(async r => {
+          if (r.status === 401) { showToast('⚠ Sesiune expirată. Reîncarcă pagina și reautentifică-te.'); return; }
           if (!r.ok) {
             const err = await r.json();
             showToast('⚠ ' + err.error);
@@ -177,7 +184,8 @@
             }
           });
           showToast(isFeatured ? '★ Articol promovat pe prima pagină' : 'Articol scos din promovate');
-        });
+        })
+        .catch(() => showToast('⚠ Eroare de rețea. Încearcă din nou.'));
     }
 
     function showToast(msg) {

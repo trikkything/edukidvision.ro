@@ -138,6 +138,9 @@ const uploadPostImg = multer({
 /* ─── Admin auth middleware ───────────────────────────────────────────── */
 function requireAdmin(req, res, next) {
   if (req.session && req.session.admin) return next();
+  if (req.xhr || req.headers.accept?.includes('application/json')) {
+    return res.status(401).json({ error: 'Sesiune expirată. Te rugăm să te reautentifici.' });
+  }
   res.redirect('/admin/login');
 }
 
