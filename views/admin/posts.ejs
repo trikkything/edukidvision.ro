@@ -93,7 +93,6 @@
           <button
             class="feature-btn <%= p.featured ? 'is-featured' : '' %>"
             data-id="<%= p.id %>"
-            onclick="featurePost(this)"
             title="<%= p.featured ? 'Elimină din promovate' : 'Promovează pe prima pagină' %>"
           >
             <svg width="12" height="12" viewBox="0 0 24 24" fill="<%= p.featured ? 'currentColor' : 'none' %>" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -104,7 +103,6 @@
           <button
             class="admin-toggle-btn <%= p.active ? 'is-active' : '' %>"
             data-id="<%= p.id %>"
-            onclick="togglePost(this)"
             title="<%= p.active ? 'Dezactivează' : 'Activează' %>"
           >
             <span class="toggle-track"><span class="toggle-thumb"></span></span>
@@ -194,6 +192,13 @@
       t.classList.add('is-visible');
       setTimeout(() => t.classList.remove('is-visible'), 2800);
     }
+
+    document.querySelectorAll('.admin-toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => togglePost(btn));
+    });
+    document.querySelectorAll('.feature-btn').forEach(btn => {
+      btn.addEventListener('click', () => featurePost(btn));
+    });
   </script>
 </body>
 </html>

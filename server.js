@@ -36,6 +36,7 @@ app.use(helmet({
       defaultSrc:    ["'self'"],
       scriptSrc:     ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com", "https://www.googletagmanager.com", "https://ssl.google-analytics.com", "https://www.google-analytics.com", "https://googleads.g.doubleclick.net", "https://www.googleadservices.com"],
       scriptSrcElem: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com", "https://www.googletagmanager.com", "https://ssl.google-analytics.com", "https://www.google-analytics.com", "https://googleads.g.doubleclick.net", "https://www.googleadservices.com"],
+      scriptSrcAttr: ["'unsafe-inline'"],
       styleSrc:      ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
       fontSrc:       ["'self'", "https://fonts.gstatic.com"],
       imgSrc:        ["'self'", "data:", "https:", "https://www.googletagmanager.com", "https://ssl.google-analytics.com", "https://www.google-analytics.com", "https://googleads.g.doubleclick.net"],
