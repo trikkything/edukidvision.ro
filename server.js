@@ -45,6 +45,8 @@ app.use(helmet({
     },
   },
   crossOriginEmbedderPolicy: false,
+  // YouTube embeds require a Referer header (otherwise "Error 153"); helmet's default is no-referrer
+  referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
 }));
 
 // Trust Nginx proxy (needed for correct IP in rate limiter)
