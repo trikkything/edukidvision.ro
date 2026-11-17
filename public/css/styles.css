@@ -1475,6 +1475,7 @@ textarea { resize: vertical; min-height: 100px; }
   margin: 1.75rem 0;
 }
 .post-body a { color: var(--teal); text-decoration: underline; }
+/* Legacy plain embeds (before the configurable video block) */
 .post-body iframe.ql-video {
   display: block;
   width: 100%;
@@ -1482,6 +1483,40 @@ textarea { resize: vertical; min-height: 100px; }
   height: auto;
   border: 0;
   margin: 2rem 0;
+}
+
+/* Configurable YouTube block: <figure class="video-embed" data-size data-align data-ratio> */
+.post-body .video-embed { width: 100%; margin: 2.25rem auto; }
+.post-body .video-embed[data-size="large"]  { width: 75%; }
+.post-body .video-embed[data-size="medium"] { width: 50%; }
+.post-body .video-embed[data-align="left"]  { margin-left: 0; margin-right: auto; }
+.post-body .video-embed[data-align="right"] { margin-left: auto; margin-right: 0; }
+.post-body .video-embed[data-ratio="9-16"]  { max-width: 360px; }
+.video-embed__frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  overflow: hidden;
+}
+.video-embed[data-ratio="4-3"]  .video-embed__frame { aspect-ratio: 4 / 3; }
+.video-embed[data-ratio="9-16"] .video-embed__frame { aspect-ratio: 9 / 16; }
+.video-embed__frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.video-embed__caption {
+  margin-top: 0.65rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--ink-muted);
+  text-align: center;
+}
+@media (max-width: 640px) {
+  .post-body .video-embed[data-size] { width: 100%; }
 }
 
 .post-footer {

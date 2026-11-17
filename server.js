@@ -70,6 +70,9 @@ const adminLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+// Cache-busting token for CSS links — changes on every restart/deploy
+app.locals.assetVersion = Date.now().toString(36);
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
