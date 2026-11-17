@@ -40,7 +40,7 @@ app.use(helmet({
       styleSrc:      ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
       fontSrc:       ["'self'", "https://fonts.gstatic.com"],
       imgSrc:        ["'self'", "data:", "https:", "https://www.googletagmanager.com", "https://ssl.google-analytics.com", "https://www.google-analytics.com", "https://googleads.g.doubleclick.net"],
-      frameSrc:      ["https://www.google.com", "https://bid.g.doubleclick.net"],
+      frameSrc:      ["https://www.google.com", "https://bid.g.doubleclick.net", "https://www.youtube-nocookie.com", "https://www.youtube.com"],
       connectSrc:    ["'self'", "https://www.google-analytics.com", "https://analytics.google.com", "https://stats.g.doubleclick.net", "https://region1.google-analytics.com", "https://region1.analytics.google.com", "https://googleads.g.doubleclick.net", "https://www.googleadservices.com"],
     },
   },

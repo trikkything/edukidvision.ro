@@ -1475,6 +1475,14 @@ textarea { resize: vertical; min-height: 100px; }
   margin: 1.75rem 0;
 }
 .post-body a { color: var(--teal); text-decoration: underline; }
+.post-body iframe.ql-video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  border: 0;
+  margin: 2rem 0;
+}
 
 .post-footer {
   display: flex;
