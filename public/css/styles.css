@@ -121,6 +121,14 @@ p { color: var(--ink-muted); line-height: 1.7; }
 
 .btn-full { width: 100%; justify-content: center; }
 
+/* Header "Cambridge One" button — brand orange */
+.btn.nav-cambridge {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: var(--ink);
+}
+.btn.nav-cambridge:hover { background: #F49A26; border-color: #F49A26; color: var(--ink); }
+
 /* ─── HEADER ──────────────────────────────────────────────────────────── */
 .site-header {
   position: sticky;
@@ -169,6 +177,16 @@ p { color: var(--ink-muted); line-height: 1.7; }
 }
 
 .site-nav a:not(.btn):hover { color: var(--teal); }
+
+/* Keep menu labels and buttons on one line */
+.site-nav a,
+.nav-dropdown-trigger { white-space: nowrap; }
+
+/* Tighten the menu on smaller desktops so both header buttons fit */
+@media (max-width: 1200px) {
+  .site-nav { gap: 1.25rem; }
+  .site-nav .btn { padding: 0.75rem 1.1rem; }
+}
 
 /* Nav dropdown */
 .nav-dropdown {
@@ -950,9 +968,8 @@ textarea { resize: vertical; min-height: 100px; }
   .stat-cell:nth-child(3) { border-top: 1px solid var(--border); }
 }
 
-@media (max-width: 768px) {
-  h1 { font-size: clamp(3rem, 13vw, 5rem); }
-
+/* Header switches to the "Meniu" toggle once the full menu no longer fits */
+@media (max-width: 1180px) {
   .menu-toggle { display: inline-flex; }
 
   .site-nav {
@@ -1010,6 +1027,10 @@ textarea { resize: vertical; min-height: 100px; }
   .nav-dropdown-col--right { border-left: none; border-top: 1px solid var(--border); }
 
   .nav-dropdown-item { padding: 0.7rem 1rem; }
+}
+
+@media (max-width: 768px) {
+  h1 { font-size: clamp(3rem, 13vw, 5rem); }
 
   .hero { padding: 2rem 0 0; }
   .hero-image-wrap { min-height: 240px; }
