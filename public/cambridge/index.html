@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Cambridge One – Edukid Vision</title>
+  <meta name="description" content="Acces rapid la Cambridge One pentru cursanții Edukid Vision.">
+  <meta name="robots" content="noindex">
+
+  <link rel="manifest" href="/cambridge/manifest.webmanifest">
+  <meta name="theme-color" content="#009B9E">
+  <link rel="icon" type="image/png" sizes="192x192" href="/cambridge/icons/icon-192.png">
+
+  <!-- iPhone / iPad: aplicație pe ecranul principal -->
+  <link rel="apple-touch-icon" href="/cambridge/icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Cambridge One">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --teal: #009B9E;
+      --teal-dark: #007A7D;
+      --bg: #f4f8f8;
+      --card: #ffffff;
+      --ink: #0a0a0a;
+      --muted: #555;
+      --border: #e5e5e5;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: 'Figtree', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: max(24px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+    }
+    .card {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 32px 24px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, .07);
+    }
+    .logo { width: 72px; height: auto; }
+    h1 { font-family: 'Outfit', system-ui, sans-serif; font-size: 26px; margin: 16px 0 8px; }
+    p { color: var(--muted); line-height: 1.5; margin: 0 0 20px; }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--teal);
+      color: #fff;
+      font: 600 17px 'Figtree', system-ui, sans-serif;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn:hover { background: var(--teal-dark); }
+    .btn.secondary { background: transparent; color: var(--teal); border: 2px solid var(--teal); margin-bottom: 12px; }
+    .btn.secondary:hover { background: rgba(0, 155, 158, .08); }
+    .install { margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border); }
+    .install h2 { font-family: 'Outfit', system-ui, sans-serif; font-size: 17px; margin: 0 0 12px; }
+    .install ol { text-align: left; color: var(--muted); line-height: 1.6; padding-left: 20px; margin: 0; }
+    .hint { font-size: 14px; color: var(--muted); margin: 16px 0 0; }
+    .back { display: inline-block; margin-top: 20px; font-size: 14px; color: var(--teal); text-decoration: none; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <img class="logo" src="/images/logo-mark-400.png" alt="Edukid Vision">
+    <h1>Cambridge One</h1>
+    <p id="intro">Deschide cursurile tale Cambridge One dintr-o singură atingere.</p>
+
+    <a class="btn" id="open" href="https://www.cambridgeone.org/login">Deschide Cambridge One</a>
+
+    <p class="hint">
+      Sfat: la prima autentificare, lasă telefonul să salveze parola. Data viitoare va fi
+      completată automat, iar Cambridge One te ține de obicei conectat până apeși „Log out”.
+    </p>
+
+    <!-- Afișat doar în browser, nu când aplicația e deschisă de pe ecranul principal -->
+    <section class="install" id="install" hidden>
+      <h2>Adaugă aplicația pe ecranul principal</h2>
+
+      <button class="btn secondary" id="install-btn" hidden>Instalează aplicația</button>
+
+      <ol id="ios-steps" hidden>
+        <li>Deschide această pagină în <strong>Safari</strong>.</li>
+        <li>Apasă butonul <strong>Partajează</strong> (pătratul cu săgeată).</li>
+        <li>Alege <strong>Adaugă pe ecranul principal</strong>, apoi <strong>Adaugă</strong>.</li>
+      </ol>
+
+      <ol id="android-steps" hidden>
+        <li>Apasă meniul <strong>⋮</strong> din Chrome.</li>
+        <li>Alege <strong>Instalează aplicația</strong> sau <strong>Adaugă pe ecranul de pornire</strong>.</li>
+      </ol>
+
+      <p class="hint" id="desktop-steps" hidden>
+        Deschide această pagină pe telefon ca să o adaugi pe ecranul principal.
+      </p>
+
+      <a class="back" href="/">← Înapoi la edukidvision.ro</a>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var CAMBRIDGE_URL = 'https://www.cambridgeone.org/login';
+
+      var standalone =
+        window.matchMedia('(display-mode: standalone)').matches ||
+        window.navigator.standalone === true;
+
+      var ua = navigator.userAgent;
+      var isIOS = /iPad|iPhone|iPod/.test(ua) || (ua.indexOf('Mac') > -1 && 'ontouchend' in document);
+      var isAndroid = /Android/.test(ua);
+      var intro = document.getElementById('intro');
+
+      if (standalone) {
+        // Deschisă de pe ecranul principal: mergem direct la Cambridge One.
+        intro.textContent = 'Se deschide Cambridge One…';
+        setTimeout(function () { window.location.href = CAMBRIDGE_URL; }, 300);
+        window.addEventListener('pageshow', function (e) {
+          if (e.persisted) intro.textContent = 'Apasă mai jos pentru a deschide din nou Cambridge One.';
+        });
+      } else {
+        document.getElementById('install').hidden = false;
+        if (isIOS) document.getElementById('ios-steps').hidden = false;
+        else if (isAndroid) document.getElementById('android-steps').hidden = false;
+        else document.getElementById('desktop-steps').hidden = false;
+      }
+
+      // Android / Chrome: buton „Instalează aplicația” într-un singur pas.
+      var deferredPrompt = null;
+      var installBtn = document.getElementById('install-btn');
+      window.addEventListener('beforeinstallprompt', function (e) {
+        e.preventDefault();
+        deferredPrompt = e;
+        installBtn.hidden = false;
+      });
+      installBtn.addEventListener('click', function () {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.finally(function () {
+          deferredPrompt = null;
+          installBtn.hidden = true;
+        });
+      });
+      window.addEventListener('appinstalled', function () { installBtn.hidden = true; });
+
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/cambridge/sw.js', { scope: '/cambridge/' }).catch(function () {});
+      }
+    })();
+  </script>
+</body>
+</html>
